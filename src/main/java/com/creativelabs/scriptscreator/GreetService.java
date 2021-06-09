@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.creativelabs.scriptscreator;
 
 public class GreetService {
 
