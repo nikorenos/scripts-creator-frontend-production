@@ -5,8 +5,9 @@ import com.creativelabs.scriptscreator.scriptshandle.DialogueToScriptByLine;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -15,6 +16,10 @@ import com.vaadin.flow.router.Route;
 @PageTitle("Dialogue To Script | Scripts Creator")
 public class DialogueToScriptView extends VerticalLayout {
 
+    TextField textFieldFile = new TextField("Select file:");
+    TextField textFieldFolder = new TextField("Select folder:");
+    TextField textFieldScriptName = new TextField("Script name:");
+
     public DialogueToScriptView() {
         addClassName("dialogue-to-script-view");
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
@@ -22,17 +27,28 @@ public class DialogueToScriptView extends VerticalLayout {
         add(getContent());
     }
 
+    public String getDialoguePath() {
+        return textFieldFile.getValue();
+    }
+    public String getFolderPath() {
+        return textFieldFolder.getValue();
+    }
+    public String getScriptPath() {
+        return textFieldScriptName.getValue();
+    }
     private VerticalLayout getContent() {
-        TextArea textarea = new TextArea("Paste your dialogue:");
-        textarea.setMinWidth("800px");
-        textarea.setMinHeight("500px");
 
-        String dialoguePath = "C:/input.d";
-        String scriptPath = "C:/dialogue.d";
+        //C:/input.d
+        //C:/dialogue.d
         DialogueToScriptByLine dialogue = new DialogueToScriptByLine();
+
         Button button = new Button("Convert");
         button.addClickListener(clickEvent ->
-                dialogue.writeScript(dialoguePath, scriptPath));
+                dialogue.writeScript(getDialoguePath(), getFolderPath() + getScriptPath()));
+        button.addClickListener(clickEvent ->
+                Notification.show("File converted and saved into: " + getFolderPath() + getScriptPath()));
+        //button.addClickListener(clickEvent -> fileChooser.chooseFile());
+
 
         // Theme variants give you predefined extra styles for components.
         // Example: Primary button is more prominent look.
@@ -42,7 +58,7 @@ public class DialogueToScriptView extends VerticalLayout {
         // Example: Pressing enter in this view clicks the Button.
         button.addClickShortcut(Key.ENTER);
 
-        VerticalLayout content = new VerticalLayout(textarea, button);
+        VerticalLayout content = new VerticalLayout(textFieldFile, textFieldFolder, textFieldScriptName, button);
         addClassName("content");
         content.setSizeFull();
         return  content;
