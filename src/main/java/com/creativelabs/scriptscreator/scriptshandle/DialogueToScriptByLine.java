@@ -58,7 +58,7 @@ public class DialogueToScriptByLine {
         return itemParts;
     }
 
-    public void writeScript(String dialoguePath, String scriptPath) {
+    public void writeScript(String dialoguePath, String gothicFolderPathPath, String questCodeName) {
         File file = new File(dialoguePath);
         int instanceCounter = 0;
         int dialogueCounter = 0;
@@ -68,8 +68,10 @@ public class DialogueToScriptByLine {
         String dialogueName = "";
         String previousNpcName = "";
         String previousDialogueName = "";
-        String questName;
         String questEntry;
+        gothicFolderPathPath = gothicFolderPathPath + "/_Work/data/Scripts/Content/Story/Dialoge/DIA_MainQuest_" + questCodeName + ".d";
+        questCodeName = "TOPIC_" + questCodeName;
+
 
         BufferedReader reader;
         try {
@@ -78,7 +80,7 @@ public class DialogueToScriptByLine {
 
             try {
 
-                FileWriter writeDialogue = new FileWriter(scriptPath);
+                FileWriter writeScript = new FileWriter(gothicFolderPathPath);
 
                 while (line != null) {
                     if (line.startsWith("Dialogue: ")) {
@@ -91,36 +93,36 @@ public class DialogueToScriptByLine {
                         dialogueName = dialogueParts[1];
 
                         if (instanceCounter > 1) {
-                            writeDialogue.write("};");
-                            writeDialogue.write("\n\n");
+                            writeScript.write("};");
+                            writeScript.write("\n\n");
                         } else {
                             previousNpcName = npcName;
                             previousDialogueName = dialogueName;
                         }
-                        writeDialogue.write("///////////////////////////////////////////////////////////////////////" + "\n");
-                        writeDialogue.write("////////////////  " + npcName + " " + dialogueName  + "\n");
-                        writeDialogue.write("///////////////////////////////////////////////////////////////////////" + "\n");
-                        writeDialogue.write("INSTANCE DIA_" + npcName + "_" + dialogueName + " (C_INFO)" + "\n");
-                        writeDialogue.write("{" + "\n");
-                        writeDialogue.write("\tnpc\t\t\t = \t" + npcName+ ";" + "\n");
-                        writeDialogue.write("\tnr\t\t\t = \t2;" + "\n");
-                        writeDialogue.write("\tcondition\t = \tDIA_" + npcName + "_" + dialogueName + "_Condition;" + "\n");
-                        writeDialogue.write("\tinformation\t = \tDIA_" + npcName + "_" + dialogueName + "_Info;" + "\n");
-                        writeDialogue.write("\timportant\t = \tFALSE;" + "\n");
-                        writeDialogue.write("\tpermanent\t = \tFALSE;" + "\n");
-                        writeDialogue.write("\tdescription\t = \t\"(to do)\";" + "\n");
-                        writeDialogue.write("};" + "\n");
-                        writeDialogue.write("func int DIA_" + npcName + "_" + dialogueName + "_Condition ()" + "\n");
-                        writeDialogue.write("{" + "\n");
+                        writeScript.write("///////////////////////////////////////////////////////////////////////" + "\n");
+                        writeScript.write("////////////////  " + npcName + " " + dialogueName  + "\n");
+                        writeScript.write("///////////////////////////////////////////////////////////////////////" + "\n");
+                        writeScript.write("INSTANCE DIA_" + npcName + "_" + dialogueName + " (C_INFO)" + "\n");
+                        writeScript.write("{" + "\n");
+                        writeScript.write("\tnpc\t\t\t = \t" + npcName+ ";" + "\n");
+                        writeScript.write("\tnr\t\t\t = \t2;" + "\n");
+                        writeScript.write("\tcondition\t = \tDIA_" + npcName + "_" + dialogueName + "_Condition;" + "\n");
+                        writeScript.write("\tinformation\t = \tDIA_" + npcName + "_" + dialogueName + "_Info;" + "\n");
+                        writeScript.write("\timportant\t = \tFALSE;" + "\n");
+                        writeScript.write("\tpermanent\t = \tFALSE;" + "\n");
+                        writeScript.write("\tdescription\t = \t\"(to do)\";" + "\n");
+                        writeScript.write("};" + "\n");
+                        writeScript.write("func int DIA_" + npcName + "_" + dialogueName + "_Condition ()" + "\n");
+                        writeScript.write("{" + "\n");
                         if (instanceCounter > 1) {
-                            writeDialogue.write("\tif (Npc_KnowsInfo (other, Dia_" + previousNpcName + "_" + previousDialogueName + "))" + "\n");
-                            writeDialogue.write("\t\t{ return TRUE; };\t" + "\n");
+                            writeScript.write("\tif (Npc_KnowsInfo (other, Dia_" + previousNpcName + "_" + previousDialogueName + "))" + "\n");
+                            writeScript.write("\t\t{ return TRUE; };\t" + "\n");
                         } else {
-                            writeDialogue.write("\treturn TRUE; \t" + "\n");
+                            writeScript.write("\treturn TRUE; \t" + "\n");
                         }
-                        writeDialogue.write("};" + "\n");
-                        writeDialogue.write("func void DIA_" + npcName + "_" + dialogueName + "_Info ()" + "\n");
-                        writeDialogue.write("{" + "\n");
+                        writeScript.write("};" + "\n");
+                        writeScript.write("func void DIA_" + npcName + "_" + dialogueName + "_Info ()" + "\n");
+                        writeScript.write("{" + "\n");
                         previousNpcName = npcName;
                         previousDialogueName = dialogueName;
                     }
@@ -128,9 +130,9 @@ public class DialogueToScriptByLine {
                         dialogueCounter+=1;
                         String dialogueLine = line.substring(3);
                         if (dialogueCounter < 10) {
-                            writeDialogue.write("\tAI_Output (other, self, \"DIA_" + npcName + "_" + dialogueName + "_15_0" + dialogueCounter + "\"); //" + dialogueLine + "\n");
+                            writeScript.write("\tAI_Output (other, self, \"DIA_" + npcName + "_" + dialogueName + "_15_0" + dialogueCounter + "\"); //" + dialogueLine + "\n");
                         } else{
-                            writeDialogue.write("\tAI_Output (other, self, \"DIA_" + npcName + "_" + dialogueName + "_15_" + dialogueCounter + "\"); //" + dialogueLine + "\n");
+                            writeScript.write("\tAI_Output (other, self, \"DIA_" + npcName + "_" + dialogueName + "_15_" + dialogueCounter + "\"); //" + dialogueLine + "\n");
                         }
                     }
 
@@ -138,58 +140,55 @@ public class DialogueToScriptByLine {
                         dialogueCounter+=1;
                         String dialogueLine = line.substring(3);
                         if (dialogueCounter < 10) {
-                            writeDialogue.write("\tAI_Output (self, other, \"DIA_" + npcName + "_" + dialogueName + "_12_0" + dialogueCounter + "\"); //" + dialogueLine + "\n");
+                            writeScript.write("\tAI_Output (self, other, \"DIA_" + npcName + "_" + dialogueName + "_12_0" + dialogueCounter + "\"); //" + dialogueLine + "\n");
                         } else {
-                            writeDialogue.write("\tAI_Output (self, other, \"DIA_" + npcName + "_" + dialogueName + "_12_" + dialogueCounter + "\"); //" + dialogueLine + "\n");
+                            writeScript.write("\tAI_Output (self, other, \"DIA_" + npcName + "_" + dialogueName + "_12_" + dialogueCounter + "\"); //" + dialogueLine + "\n");
                         }
                     }
 
                     if (line.startsWith("//")) {
-                        writeDialogue.write("\t" + line);
-                        writeDialogue.write("\n");
+                        writeScript.write("\t" + line);
+                        writeScript.write("\n");
                     }
 
                     if (line.startsWith("GivenItem")) {
                         String[] itemParts = convertItem(line);
-                        writeDialogue.write("\tGive_And_Remove(" + itemParts[0] + "," + itemParts[1] + ");");
-                        writeDialogue.write("\n");
+                        writeScript.write("\tGive_And_Remove(" + itemParts[0] + "," + itemParts[1] + ");");
+                        writeScript.write("\n");
                     }
 
                     if (line.startsWith("ReceivedItem")) {
                         String[] itemParts = convertItem(line);
-                        writeDialogue.write("\tCreate_And_Give(" + itemParts[0] + "," + itemParts[1] + ");");
-                        writeDialogue.write("\n");
+                        writeScript.write("\tCreate_And_Give(" + itemParts[0] + "," + itemParts[1] + ");");
+                        writeScript.write("\n");
                     }
 
                     if (line.startsWith("BeginQuest")) {
                         String[] entryParts = convertEntry(line);
-                        questName = entryParts[0];
                         questEntry = entryParts[1];
-                        writeDialogue.write("\n");
-                        writeDialogue.write("\tSTART_MISSION(" + questName + ", \"" + questEntry + "\");");
-                        writeDialogue.write("\n");
+                        writeScript.write("\n");
+                        writeScript.write("\tSTART_MISSION(" + questCodeName + ", \"" + questEntry + "\");");
+                        writeScript.write("\n");
                     }
 
                     if (line.startsWith("Quest")) {
                         String[] entryParts = convertEntry(line);
-                        questName = entryParts[0];
                         questEntry = entryParts[1];
-                        writeDialogue.write("\n");
-                        writeDialogue.write("\tENTRY_MISSION(" + questName + ", \"" + questEntry + "\");");
-                        writeDialogue.write("\n");
+                        writeScript.write("\n");
+                        writeScript.write("\tENTRY_MISSION(" + questCodeName + ", \"" + questEntry + "\");");
+                        writeScript.write("\n");
                     }
                     if (line.startsWith("FinishQuest")) {
                         String[] entryParts = convertEntry(line);
-                        questName = entryParts[0];
                         questEntry = entryParts[1];
-                        writeDialogue.write("\n");
-                        writeDialogue.write("\tCLOSE_MISSION(" + questName + ", \"" + questEntry + "\");");
-                        writeDialogue.write("\n");
+                        writeScript.write("\n");
+                        writeScript.write("\tCLOSE_MISSION(" + questCodeName + ", \"" + questEntry + "\");");
+                        writeScript.write("\n");
                     }
                     if (line.startsWith("EXP")) {
                         String exp = line.substring(4);
-                        writeDialogue.write("\tB_GivePlayerXP (" + exp + ");");
-                        writeDialogue.write("\n");
+                        writeScript.write("\tB_GivePlayerXP (" + exp + ");");
+                        writeScript.write("\n");
                     }
 
                     if (line.startsWith("C")) {
@@ -197,26 +196,26 @@ public class DialogueToScriptByLine {
                         System.out.println("choice: " + choiceCounter);
                         String choiceLine = line.substring(4);
                         if (choiceCounter <2) {
-                            writeDialogue.write("\n\tInfo_ClearChoices(Dia_" + npcName + "_" + dialogueName + ");" + "\n");
+                            writeScript.write("\n\tInfo_ClearChoices(Dia_" + npcName + "_" + dialogueName + ");" + "\n");
                         }
-                        writeDialogue.write("\tInfo_AddChoice(Dia_" + npcName + "_" + dialogueName + ",\"" + choiceLine + "\",Dia_" + npcName + "_" + dialogueName + "_" + choiceCounter + ");"+ "\n");
+                        writeScript.write("\tInfo_AddChoice(Dia_" + npcName + "_" + dialogueName + ",\"" + choiceLine + "\",Dia_" + npcName + "_" + dialogueName + "_" + choiceCounter + ");"+ "\n");
                     }
 
                     if (line.startsWith("S")) {
                         sectionCounter+=1;
-                        writeDialogue.write("\n");
-                        writeDialogue.write("};");
-                        writeDialogue.write("\n");
-                        writeDialogue.write("FUNC VOID DIA_" + npcName + "_" + dialogueName + "_" + sectionCounter + " ()" + "\n");
-                        writeDialogue.write("{");
-                        writeDialogue.write("\tInfo_ClearChoices(Dia_" + npcName + "_" + dialogueName + ");" + "\n");
+                        writeScript.write("\n");
+                        writeScript.write("};");
+                        writeScript.write("\n");
+                        writeScript.write("FUNC VOID DIA_" + npcName + "_" + dialogueName + "_" + sectionCounter + " ()" + "\n");
+                        writeScript.write("{");
+                        writeScript.write("\tInfo_ClearChoices(Dia_" + npcName + "_" + dialogueName + ");" + "\n");
                     }
 
                     line = reader.readLine();
                 }
-                writeDialogue.write("};");
+                writeScript.write("};");
                 reader.close();
-                writeDialogue.close();
+                writeScript.close();
                 System.out.println("Dialogue successfully wrote to the file.");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -230,9 +229,10 @@ public class DialogueToScriptByLine {
 
     public static void main(String[] args) {
         DialogueToScriptByLine dialogue = new DialogueToScriptByLine();
-        String dialoguePath = "C:/input.d";
-        String scriptPath = "C:/dialogue.d";
-        dialogue.writeScript(dialoguePath, scriptPath);
+        String dialoguePath = "E:/dialogue.d";
+        String scriptPath = "E:/script.d";
+        String questCodeName = "LostLumberjack";
+        dialogue.writeScript(dialoguePath, scriptPath, questCodeName);
     }
 }
 

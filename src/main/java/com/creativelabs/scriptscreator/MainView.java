@@ -65,10 +65,10 @@ public class MainView extends AppLayout {
         RouterLink listLink = new RouterLink("Dialogue to script", DialogueToScriptView.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(
+       /* addToDrawer(new VerticalLayout(
                 listLink,
                 new RouterLink("Script to dialogue", ScriptToDialogueView.class),
                 new RouterLink("Stats", StatsView.class)
-        ));
+        ));*/
     }
 }
