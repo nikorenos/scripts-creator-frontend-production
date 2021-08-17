@@ -24,15 +24,13 @@ public class ExitDialogue {
     }
 
     public List<String> filterNpcFiles(String folderPath) throws IOException {
-        List<String> filteredFilesPaths = Files.list(Paths.get(folderPath))
+        return Files.list(Paths.get(folderPath))
                 .filter(Files::isRegularFile)
                 .map(Path::toFile)
                 .map(File::getName)
                 .filter(name -> !name.equals("PC_Hero.d"))
                 .map(name -> folderPath + "/" + name)
                 .collect(Collectors.toList());
-
-        return filteredFilesPaths;
     }
 
     public String prepareExitFile(List<String> filteredFilesPaths) {
@@ -78,9 +76,15 @@ public class ExitDialogue {
         }
         return exitDialogueText;
     }
-    private void saveExitDialogues(String exitDialogueText, String dialoguePath) {
+    public void saveExitDialogues(String gothicFolder) throws IOException {
+        ExitDialogue exitDialogue = new ExitDialogue();
+        String npcFolderPath = gothicFolder + "/_Work/data/Scripts/Content/Story/NPC";
+        String exitScriptPath = "E:/Gothic 2/_Work/data/Scripts/Content/Story/Dialoge/DIA_Exit.d";
+
+        List<String> filteredNpcFiles = exitDialogue.filterNpcFiles(npcFolderPath);
+        String exitDialogueText = exitDialogue.prepareExitFile(filteredNpcFiles);
         try {
-            FileWriter writeDialogue = new FileWriter(dialoguePath);
+            FileWriter writeDialogue = new FileWriter(gothicFolder + exitScriptPath);
             writeDialogue.write(exitDialogueText);
             writeDialogue.close();
             System.out.println("Dialogue successfully wrote to the file.");
@@ -89,14 +93,11 @@ public class ExitDialogue {
         }
     }
 
+
     public static void main(String[] args) throws IOException {
         ExitDialogue exitDialogue = new ExitDialogue();
-        String npcFolderPath = "E:/Gothic 2/_Work/data/Scripts/Content/Story/NPC";
-        String dialoguePath = "E:/Gothic 2/_Work/data/Scripts/Content/Story/Dialoge/DIA_Exit.d";
-
-        List<String> filteredNpcFiles = exitDialogue.filterNpcFiles(npcFolderPath);
-        String exitDialogueText = exitDialogue.prepareExitFile(filteredNpcFiles);
-        exitDialogue.saveExitDialogues(exitDialogueText, dialoguePath);
+        String gothicFolder = "E:/Gothic 2";
+        exitDialogue.saveExitDialogues(gothicFolder);
     }
 }
 

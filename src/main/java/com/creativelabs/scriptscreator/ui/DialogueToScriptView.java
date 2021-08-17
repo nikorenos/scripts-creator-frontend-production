@@ -7,7 +7,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
@@ -54,25 +53,11 @@ public class DialogueToScriptView extends VerticalLayout {
         buttonConvert.addClickListener(clickEvent ->
                 Notification.show("File converted and saved into: " + getFolderPath() + getQuestCodeName()));
 
-        Button buttonExitDialogue = new Button("Create Exit dialogues");
-        buttonExitDialogue.addClickListener(clickEvent ->
-                dialogue.writeScript(getDialoguePath(), getFolderPath(), getQuestCodeName()));
-        buttonExitDialogue.addClickListener(clickEvent ->
-                Notification.show("Exit dialogues created!"));
 
-
-        // Theme variants give you predefined extra styles for components.
-        // Example: Primary buttonConvert is more prominent look.
         buttonConvert.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonExitDialogue.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        // You can specify keyboard shortcuts for buttons.
-        // Example: Pressing enter in this view clicks the Button.
         buttonConvert.addClickShortcut(Key.ENTER);
-        buttonExitDialogue.addClickShortcut(Key.ENTER);
 
-        HorizontalLayout buttons = new HorizontalLayout(buttonConvert, buttonExitDialogue);
-        VerticalLayout content = new VerticalLayout(textFieldFile, textFieldFolder, textQuestCodeName, buttons, emptyLabel, instructionTitle, instructionDescription);
+        VerticalLayout content = new VerticalLayout(textFieldFile, textFieldFolder, textQuestCodeName, buttonConvert, emptyLabel, instructionTitle, instructionDescription);
 
         addClassName("content");
         content.setSizeFull();
