@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
@@ -22,8 +23,9 @@ public class DialogueToScriptView extends VerticalLayout {
     TextField textQuestCodeName = new TextField("Quest code name:");
     Label emptyLabel = new Label("");
     Label instructionTitle = new Label("Instrukcja:");
-    Label instructionDescription = new Label("Należy wybrać plik z zadaniem zgodnie z instrukcją pisania questów. Następnie trzeba podać folder "
-            + "gdzie ma się znaleźć skrypt i podać kodową nazwę zadania np: LostLumberjack. Program tworzy plik ScriptCreatorSettings.txt w głównym folderze z grą");
+    Label instructionDescription = new Label("Należy wybrać plik z zadaniem napisany zgodnie z instrukcją pisania questów. Następnie trzeba podać folder "
+            + "Gothic i podać kodową nazwę zadania np: KillMonster. Program tworzy skrypt w folderze Gothic 2/_Work/data/Scripts/Content/Story/Dialoge. "
+            + "Aby utworzyć pliki Exit wystarczy podać folder z Gothic");
 
 
     public DialogueToScriptView() {
@@ -46,22 +48,32 @@ public class DialogueToScriptView extends VerticalLayout {
 
         DialogueToScriptByLine dialogue = new DialogueToScriptByLine();
 
-        Button button = new Button("Convert");
-        button.addClickListener(clickEvent ->
+        Button buttonConvert = new Button("Convert");
+        buttonConvert.addClickListener(clickEvent ->
                 dialogue.writeScript(getDialoguePath(), getFolderPath(), getQuestCodeName()));
-        button.addClickListener(clickEvent ->
+        buttonConvert.addClickListener(clickEvent ->
                 Notification.show("File converted and saved into: " + getFolderPath() + getQuestCodeName()));
+
+        Button buttonExitDialogue = new Button("Create Exit dialogues");
+        buttonExitDialogue.addClickListener(clickEvent ->
+                dialogue.writeScript(getDialoguePath(), getFolderPath(), getQuestCodeName()));
+        buttonExitDialogue.addClickListener(clickEvent ->
+                Notification.show("Exit dialogues created!"));
 
 
         // Theme variants give you predefined extra styles for components.
-        // Example: Primary button is more prominent look.
-        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        // Example: Primary buttonConvert is more prominent look.
+        buttonConvert.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonExitDialogue.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         // You can specify keyboard shortcuts for buttons.
         // Example: Pressing enter in this view clicks the Button.
-        button.addClickShortcut(Key.ENTER);
+        buttonConvert.addClickShortcut(Key.ENTER);
+        buttonExitDialogue.addClickShortcut(Key.ENTER);
 
-        VerticalLayout content = new VerticalLayout(textFieldFile, textFieldFolder, textQuestCodeName, button, emptyLabel, instructionTitle, instructionDescription);
+        HorizontalLayout buttons = new HorizontalLayout(buttonConvert, buttonExitDialogue);
+        VerticalLayout content = new VerticalLayout(textFieldFile, textFieldFolder, textQuestCodeName, buttons, emptyLabel, instructionTitle, instructionDescription);
+
         addClassName("content");
         content.setSizeFull();
         return  content;
