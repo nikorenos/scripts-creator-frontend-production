@@ -6,18 +6,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ReadAndModifyNpc {
 
     public List<String> filesNamesList(String folderPath) throws IOException {
-        List<String> filteredFilesPaths = Files.list(Paths.get(folderPath))
+        return Files.list(Paths.get(folderPath))
                 .filter(Files::isRegularFile)
                 .map(Path::toFile)
                 .map(File::getAbsolutePath)
                 .collect(Collectors.toList());
-
-        return filteredFilesPaths;
     }
 
     public String extractNpcName(String filePath) {
@@ -32,7 +29,7 @@ public class ReadAndModifyNpc {
         ReadAndModifyNpc readAllFiles = new ReadAndModifyNpc();
         String npcName;
         String startupEntry;
-        Boolean isNPCAmbient = false;
+        boolean isNPCAmbient = false;
         for(String filePath : filesNamesList) {
             if (filePath.contains("_L") || filePath.contains("_M")) {
                 npcName = "Ambient";
@@ -92,7 +89,7 @@ public class ReadAndModifyNpc {
 
 
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
         //Creating a File object for directory
         String directoryPath = "E:/Temp";
         String writePath = "E:/Temp/Temp2";
