@@ -10,14 +10,14 @@ import java.util.stream.Stream;
 
 public class ReadAndModifyNpc {
 
-    public List filesNamesList(String directoryPath) throws IOException {
-        List filesNamesList;
-        try (Stream<Path> paths = Files.walk(Paths.get(String.valueOf(directoryPath)), 1)) {
+    public List<String> filesNamesList(String folderPath) throws IOException {
+        List<String> filteredFilesPaths = Files.list(Paths.get(folderPath))
+                .filter(Files::isRegularFile)
+                .map(Path::toFile)
+                .map(File::getAbsolutePath)
+                .collect(Collectors.toList());
 
-            filesNamesList = paths.filter(Files::isRegularFile)
-                    .collect(Collectors.toList());
-        }
-        return filesNamesList;
+        return filteredFilesPaths;
     }
 
     public String extractNpcName(String filePath) {
@@ -28,13 +28,12 @@ public class ReadAndModifyNpc {
         return reverseString;
     }
 
-    public void modifyNpc(List filesNamesList, String directoryPath, String destinationFolder, int npcId) {
+    public void modifyNpc(List<String> filesNamesList, String destinationFolder, int npcId) {
         ReadAndModifyNpc readAllFiles = new ReadAndModifyNpc();
         String npcName;
         String startupEntry;
         Boolean isNPCAmbient = false;
-        for(Object file : filesNamesList) {
-            String filePath = file.toString();
+        for(String filePath : filesNamesList) {
             if (filePath.contains("_L") || filePath.contains("_M")) {
                 npcName = "Ambient";
                 isNPCAmbient = true;
@@ -95,13 +94,13 @@ public class ReadAndModifyNpc {
 
     public static void main(String args[]) throws IOException {
         //Creating a File object for directory
-        String directoryPath = "E:/Gothic 2/_Work/data/Scripts/Content/Npc";
-        String writePath = "E:/Gothic 2/_Work/data/Scripts/Content/NpcAfter";
-        int npcId = 107;
+        String directoryPath = "E:/Temp";
+        String writePath = "E:/Temp/Temp2";
+        int npcId = 1;
 
         ReadAndModifyNpc readAllFiles = new ReadAndModifyNpc();
-        List filesNames = readAllFiles.filesNamesList(directoryPath);
-        readAllFiles.modifyNpc(filesNames, directoryPath, writePath, npcId);
+        List<String> filesNames = readAllFiles.filesNamesList(directoryPath);
+        readAllFiles.modifyNpc(filesNames, writePath, npcId);
 
 
     }
