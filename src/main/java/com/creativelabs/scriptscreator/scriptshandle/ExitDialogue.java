@@ -79,7 +79,7 @@ public class ExitDialogue {
     public void saveExitDialogues(String gothicFolder) throws IOException {
         ExitDialogue exitDialogue = new ExitDialogue();
         String npcFolderPath = gothicFolder + "/_Work/data/Scripts/Content/Story/NPC";
-        String exitScriptPath = "E:/Gothic 2/_Work/data/Scripts/Content/Story/Dialoge/DIA_Exit.d";
+        String exitScriptPath = "/_Work/data/Scripts/Content/Story/Dialoge/DIA_Exit.d";
 
         List<String> filteredNpcFiles = exitDialogue.filterNpcFiles(npcFolderPath);
         String exitDialogueText = exitDialogue.prepareExitFile(filteredNpcFiles);
