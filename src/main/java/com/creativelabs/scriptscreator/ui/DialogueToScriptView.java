@@ -23,8 +23,7 @@ public class DialogueToScriptView extends VerticalLayout {
     Label emptyLabel = new Label("");
     Label instructionTitle = new Label("Instrukcja:");
     Label instructionDescription = new Label("Należy wybrać plik z zadaniem napisany zgodnie z instrukcją pisania questów. Następnie trzeba podać folder "
-            + "Gothic i podać kodową nazwę zadania np: KillMonster. Program tworzy skrypt w folderze Gothic 2/_Work/data/Scripts/Content/Story/Dialoge. "
-            + "Aby utworzyć pliki Exit wystarczy podać folder z Gothic");
+            + "Gothic i podać kodową nazwę zadania np: KillMonster. Program tworzy skrypt w folderze Gothic 2/_Work/data/Scripts/Content/Story/Dialoge.");
 
 
     public DialogueToScriptView() {

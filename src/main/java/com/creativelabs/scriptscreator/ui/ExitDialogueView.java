@@ -21,8 +21,8 @@ public class ExitDialogueView extends VerticalLayout {
 
     TextField textFieldFolder = new TextField("Select Gothic folder:");
     Label emptyLabel = new Label("");
-    Label instructionTitle = new Label("Instrukcja:");
-    Label instructionDescription = new Label("Pliki exit tworzone są...");
+    Label instructionTitle = new Label("Opis:");
+    Label instructionDescription = new Label("Plik DIA_Exit.d tworzony jest w folderze Gothic 2/_Work/data/Scripts/Content/Story/Dialoge.");
 
 
     public ExitDialogueView() {
