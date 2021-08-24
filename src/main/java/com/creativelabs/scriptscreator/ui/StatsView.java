@@ -20,11 +20,11 @@ public class StatsView extends VerticalLayout {
     }
 
     private VerticalLayout getContent() {
-        H1 logo = new H1("Stats:");
+        H1 logo = new H1("Stats:(wip)");
 
         Label labelAllNpcs = new Label("Amount of NPCs: ");
-        Label labelAmountOfLocations = new Label("Amount of camps: ");
-        Label labelLocations = new Label("Created camps with NPCs: ");
+        Label labelAmountOfLocations = new Label("Amount of main quests: ");
+        Label labelLocations = new Label("Amount of side quests: ");
         VerticalLayout content = new VerticalLayout(logo,labelAllNpcs, labelAmountOfLocations, labelLocations);
         content.addClassName("content");
         content.setSizeFull();

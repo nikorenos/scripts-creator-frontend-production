@@ -46,7 +46,7 @@ public class ExitDialogue {
                 String line = reader.readLine();
                 while (line != null) {
                     line = reader.readLine();
-                    if ((line != null) && (line.startsWith("instance"))) {
+                    if ((line != null) && (line.startsWith("instance") ||  line.startsWith("INSTANCE"))) {
                         npcName = readNpcFile(line);
                         exitDialogueText = exitDialogueText +
                                 "// ************************************************************\n" +
