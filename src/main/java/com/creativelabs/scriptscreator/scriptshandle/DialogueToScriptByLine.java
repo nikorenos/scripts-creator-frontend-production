@@ -230,9 +230,9 @@ public class DialogueToScriptByLine {
     public static void main(String[] args) {
         DialogueToScriptByLine dialogue = new DialogueToScriptByLine();
         String dialoguePath = "E:/dialogue.d";
-        String scriptPath = "E:/script.d";
-        String questCodeName = "LostLumberjack";
-        dialogue.writeScript(dialoguePath, scriptPath, questCodeName);
+        String gothicPath = "E:/Gothic 2";
+        String questCodeName = "MainStory";
+        dialogue.writeScript(dialoguePath, gothicPath, questCodeName);
     }
 }
 
