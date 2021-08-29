@@ -13,7 +13,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 
-@Route(value = "dialogue-to-script", layout = MainView.class)
+@Route(value = "dialogue-to-script-from-file", layout = MainView.class)
 @PageTitle("Dialogue To Script | Scripts Creator")
 public class DialogueToScriptView extends VerticalLayout {
 
@@ -27,7 +27,7 @@ public class DialogueToScriptView extends VerticalLayout {
 
 
     public DialogueToScriptView() {
-        addClassName("dialogue-to-script-view");
+        addClassName("dialogue-to-script-view-from-file");
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
         add(getContent());

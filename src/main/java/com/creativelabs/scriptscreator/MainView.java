@@ -41,7 +41,7 @@ public class MainView extends AppLayout {
     }
 
     private void createDrawer() {
-        RouterLink listLink = new RouterLink("Dialogue to script", DialogueToScriptView.class);
+        RouterLink listLink = new RouterLink("Dialogue to script", DialogueToScriptFromStringView.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
 
         addToDrawer(new VerticalLayout(
