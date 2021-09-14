@@ -7,7 +7,6 @@ public class ReadStringByLine {
     public String convertDialogueIntoScript(String dialogue, String questCodeName) {
         DialogueToScriptByLine dialogueToScriptByLine = new DialogueToScriptByLine();
         StringBuilder script = new StringBuilder();
-        String[] lines = dialogue.split(System.getProperty("line.separator"));
         questCodeName = "TOPIC_" + questCodeName;
 
         Scanner scanner = new Scanner(dialogue);
