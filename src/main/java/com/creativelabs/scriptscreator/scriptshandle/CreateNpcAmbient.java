@@ -4,11 +4,24 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class CreateNpcAmbient {
+
+    public int findMaxNpcId(String folderPath) throws IOException {
+        return Files.list(Paths.get(folderPath))
+                .filter(Files::isRegularFile)
+                .map(Path::toFile)
+                .map(File::getName)
+                .filter(name -> !name.equals("PC_Hero.d"))
+                .map(name -> name.replaceAll("\\D+",""))
+                .map(Integer::parseInt)
+                .mapToInt(Integer::intValue).max().getAsInt();
+    }
 
     public static ArrayList<String> startupEntriesList(File obj) {
 
@@ -133,10 +146,14 @@ public class CreateNpcAmbient {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         CreateNpcAmbient createNpcAmbient = new CreateNpcAmbient();
-        createNpcAmbient.createNPC(10,114);
+        String gothicFolder = "E:/Gothic 2";
+        String npcFolderPath = gothicFolder + "/_Work/data/Scripts/Content/Story/NPC";
+        int maxNpcId = createNpcAmbient.findMaxNpcId(npcFolderPath);
+        System.out.println(maxNpcId);
+        createNpcAmbient.createNPC(3,maxNpcId);
 
     }
 }

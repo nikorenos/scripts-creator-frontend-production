@@ -47,8 +47,9 @@ public class MainView extends AppLayout {
         addToDrawer(new VerticalLayout(
                 listLink,
                 //new RouterLink("Script to dialogue", ScriptToDialogueView.class),
-                new RouterLink("Exit dialogues for NPC", ExitDialogueView.class),
-                new RouterLink("Stats", StatsView.class)
+                //new RouterLink("Exit dialogues for NPC", ExitDialogueView.class),
+                //new RouterLink("Stats", StatsView.class),
+                new RouterLink("Contact", ContactView.class)
         ));
     }
 }
