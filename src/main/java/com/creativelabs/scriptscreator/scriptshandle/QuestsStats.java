@@ -9,18 +9,41 @@ import java.util.stream.Collectors;
 
 public class QuestsStats {
 
-    public String readNpcFile(String line) {
-        String npcName = "";
-        int npcNameIndex = 0;
-        String findStrInstance = "instance ";
-        while (npcNameIndex != -1) {
-            npcNameIndex = line.indexOf(findStrInstance, npcNameIndex);
-            if (npcNameIndex != -1) {
-                npcNameIndex += findStrInstance.length();
-                npcName = line.substring(npcNameIndex, line.length()-14);
+    public String orderNpcOccurrence(List<String> npcNamesList) {
+        Map<String, Long> unsortedNpcOccurrenceMap =
+                npcNamesList.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+        LinkedHashMap<String, Integer> sortedNpcOccurrenceMap = new LinkedHashMap<>();
+
+        //Use Comparator.reverseOrder() for reverse ordering
+        unsortedNpcOccurrenceMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEachOrdered(x -> sortedNpcOccurrenceMap.put(x.getKey(), Math.toIntExact(x.getValue())));
+        String npcOccurenceInfo = "";
+        for (Map.Entry<String, Integer> entry : sortedNpcOccurrenceMap.entrySet()) {
+            npcOccurenceInfo = npcOccurenceInfo + entry.getKey() + "(" + entry.getValue() + "), ";
+        }
+        return npcOccurenceInfo + "\n\n";
+    }
+
+
+    public int convertExp(String line) {
+        int startString1 = 0;
+        int startString2 = 0;
+        String findString = "(";
+        String findString2 = ")";
+        String number = "";
+
+        while (startString1 != -1) {
+            startString1 = line.indexOf(findString, startString1);
+            startString2 = line.indexOf(findString2, startString2);
+
+            if (startString1 != -1) {
+                startString1 += findString.length();
+                number = line.substring(startString1, startString2);
             }
         }
-        return npcName;
+        return Integer.parseInt(number);
     }
 
     public List<String> filterQuestsFiles(String folderPath) throws IOException {
@@ -28,7 +51,8 @@ public class QuestsStats {
                 .filter(Files::isRegularFile)
                 .map(Path::toFile)
                 .map(File::getName)
-                .filter(name -> name.contains("DIA_MainQuest_LostLumberjack"))//Quest
+                //.filter(name -> name.contains("DIA_MainQuest_LostLumberjack") || name.contains("DIA_MainQuest_Kick"))//Quest
+                .filter(name -> name.contains("Quest"))
                 .map(name -> folderPath + "/" + name)
                 .collect(Collectors.toList());
     }
@@ -37,8 +61,14 @@ public class QuestsStats {
         File file;
         String npcName;
         String info = "";
-        List<String> npcNames = new ArrayList<>();
-        //ilosc lini dialogowych, ilosc xp, ilosc denarów, otrzymane itemy, czy jest walka z npc, ilosc wpisow do dziennika, ilość wyborów
+        int dialogueLineCounter = 0;
+        int heroDialogueLineCounter = 0;
+        int npcDialogueLineCounter = 0;
+        int allDialogueLineCounter = 0;
+        int XPCounter = 0;
+        List<String> npcNamesList = new ArrayList<>();
+        List<String> allNpcNamesList = new ArrayList<>();
+        //ilosc lini dialogowych, ilosc xp, ilosc denarow, otrzymane itemy, czy jest walka z npc, ilosc wpisow do dziennika, ilosc wyborow
 
         BufferedReader reader;
         for (String fileName : filteredFilesPaths) {
@@ -52,36 +82,44 @@ public class QuestsStats {
                     line = reader.readLine();
 
                     if (line != null) {
-                        if (line.contains(("npc\t\t\t = \t"))) {
-                            npcName = line.substring(11,line.length()-1);
-                            npcNames.add(npcName);
-                            /*info = info +
-                                    "Npc: " + npcName + "\n";*/
+                        if (line.startsWith("\tnpc")) {
+                            npcName = line.substring(11, line.length()-1);
+                            npcNamesList.add(npcName);
+                            allNpcNamesList.add(npcName);
+                            //System.out.println(line.substring(11, line.length()-1));
 
+                        }
+                        if (line.contains("AI_Output")) {
+                            dialogueLineCounter++;
+                        }
+                        if (line.contains("AI_Output (other, self,")) {
+                            heroDialogueLineCounter++;
+                        }
+                        if (line.contains("AI_Output (self, other,")) {
+                            npcDialogueLineCounter++;
+                        }
+                        if (line.contains("B_GivePlayerXP")) {
+                            XPCounter = convertExp(line);
                         }
                     }
                 }
 
-                Map<String, Long> unsortedNpcOccurrenceMap =
-                        npcNames.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-                LinkedHashMap<String, Integer> sortedNpcOccurrenceMap = new LinkedHashMap<>();
+                info = info + "Ilosc lini dialogowych: " + dialogueLineCounter + "\n" +
+                        "Ilosc dialogow z Npc (lacznie: " + npcNamesList.size() + "): \n" +
+                        orderNpcOccurrence(npcNamesList);
 
-//Use Comparator.reverseOrder() for reverse ordering
-                unsortedNpcOccurrenceMap.entrySet()
-                        .stream()
-                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                        .forEachOrdered(x -> sortedNpcOccurrenceMap.put(x.getKey(), Math.toIntExact(x.getValue())));
-                String npcOccurenceInfo = "";
-                for (Map.Entry<String, Integer> entry : sortedNpcOccurrenceMap.entrySet()) {
-                    npcOccurenceInfo = npcOccurenceInfo + entry.getKey() + "(" + entry.getValue() + "), ";
-                }
-                info = info + "Ilość dialogów z Npc (łącznie: " + npcNames.size() + "): \n" +
-                        npcOccurenceInfo;
+                allDialogueLineCounter = allDialogueLineCounter + dialogueLineCounter;
+                dialogueLineCounter = 0;
+                npcNamesList.clear();
                 reader.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        info = info + "Ilosc wszystkich lini dialogowych: " + allDialogueLineCounter + " \n" +
+                "Ilosc wszystkich lini dialogowych Morrisa: " + heroDialogueLineCounter + " \n" +
+                "Ilosc wszystkich lini dialogowych npc: " + npcDialogueLineCounter + "\n" +
+                "Ilosc wszystkich dialogow z npc: " + orderNpcOccurrence(allNpcNamesList);
         return info;
     }
 

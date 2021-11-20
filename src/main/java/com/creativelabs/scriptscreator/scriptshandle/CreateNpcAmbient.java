@@ -152,8 +152,8 @@ public class CreateNpcAmbient {
         String gothicFolder = "E:/Gothic 2";
         String npcFolderPath = gothicFolder + "/_Work/data/Scripts/Content/Story/NPC";
         int maxNpcId = createNpcAmbient.findMaxNpcId(npcFolderPath);
-        System.out.println(maxNpcId);
-        createNpcAmbient.createNPC(3,maxNpcId);
+        System.out.println("Pierwszy wolny numer dla npc: " + (maxNpcId + 1));
+        //createNpcAmbient.createNPC(3,maxNpcId+1);
 
     }
 }
