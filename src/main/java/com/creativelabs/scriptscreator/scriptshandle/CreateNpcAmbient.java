@@ -8,7 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class CreateNpcAmbient {
 
@@ -18,9 +20,20 @@ public class CreateNpcAmbient {
                 .map(Path::toFile)
                 .map(File::getName)
                 .filter(name -> !name.equals("PC_Hero.d"))
-                .map(name -> name.replaceAll("\\D+",""))
+                .map(name -> name.replaceAll("[^\\d.]", ""))
+                .map(name -> name.replaceAll("[.]", ""))
                 .map(Integer::parseInt)
                 .mapToInt(Integer::intValue).max().getAsInt();
+    }
+    public List<String> listNpc(String folderPath) throws IOException {
+        return Files.list(Paths.get(folderPath))
+                .filter(Files::isRegularFile)
+                .map(Path::toFile)
+                .map(File::getName)
+                .filter(name -> !name.equals("PC_Hero.d"))
+                .map(name -> name.replaceAll("[^\\d.]", ""))
+                .map(name -> name.replaceAll("[.]", ""))
+                .collect(Collectors.toList());
     }
 
     public static ArrayList<String> startupEntriesList(File obj) {
@@ -49,7 +62,7 @@ public class CreateNpcAmbient {
 
             String name = "NAME_Bauer";
             String npcGuild = "BAU";
-            String npcName = "CITY_" + npcId + "_FARMER_Ambient";
+            String npcName = "CITY_" + npcId + "_City_Ambient";
             String waypoint = "CITY";
             int SetAttributesToChapter = 3;
             int voice = 1 + n;
@@ -153,6 +166,7 @@ public class CreateNpcAmbient {
         String npcFolderPath = gothicFolder + "/_Work/data/Scripts/Content/Story/NPC";
         int maxNpcId = createNpcAmbient.findMaxNpcId(npcFolderPath);
         System.out.println("Pierwszy wolny numer dla npc: " + (maxNpcId + 1));
+
         //createNpcAmbient.createNPC(3,maxNpcId+1);
 
     }
