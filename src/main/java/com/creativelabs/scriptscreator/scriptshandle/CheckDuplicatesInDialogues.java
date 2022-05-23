@@ -2,8 +2,8 @@ package com.creativelabs.scriptscreator.scriptshandle;
 
 
 import java.io.*;
-
-import static jdk.nashorn.internal.objects.NativeString.indexOf;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CheckDuplicatesInDialogues {
 
@@ -12,29 +12,29 @@ public class CheckDuplicatesInDialogues {
         int startString2 = 0;
         String findString = "\"";
         String findString2 = "); //";
-        String dialogue = "";
-        String dialogueLine = "";
+        String dialogueLine;
         String[] dialogueParts = null;
 
         while (startString1 != -1) {
             startString1 = line.indexOf(findString, startString1);
             startString2 = line.indexOf(findString2, startString2);
 
-            dialogue = line.substring(startString1 + 1, startString2 - 1) + "_" + line.substring(startString2 + 5);
-            dialogueParts = dialogue.split("_");
+            dialogueLine = line.substring(startString1 + 1, startString2 - 1) + "#" + line.substring(startString2 + 5);
+            dialogueParts = dialogueLine.split("#");
             startString1 = -1;
         }
         return dialogueParts;
     }
 
 
-
     public static void main(String[] args) {
 
         CheckDuplicatesInDialogues check = new CheckDuplicatesInDialogues();
 
-        String dialoguePath = "E:\\Gothic 2\\_Work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_Gambler.d";
+        String dialoguePath = "E:\\Gothic 2\\_Work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_LostArt.d";
         File file = new File(dialoguePath);
+        Map<String, String> dialoguesMap = new HashMap<>();
+        int duplicates = 0;
 
         BufferedReader reader;
         try {
@@ -44,11 +44,20 @@ public class CheckDuplicatesInDialogues {
             while (line != null) {
                 if (line.contains("AI_Output")) {
                     String[] dialogueLine = check.extractAIOutput(line);
-                    //System.out.println("dialogueLine: " + dialogueLine);
+                    for (Map.Entry<String, String> entry : dialoguesMap.entrySet()) {
+                        if (entry.getKey().equals(dialogueLine[0]) && !entry.getValue().equals(dialogueLine[1])) {
+                            duplicates++;
+                            System.out.println(entry.getKey() + ": " + entry.getValue());
+                            System.out.println(entry.getKey() + ": " + dialogueLine[1]);
+                            System.out.println();
+                        }
+                    }
+                    dialoguesMap.put(dialogueLine[0], dialogueLine[1]);
                 }
 
                 line = reader.readLine();
             }
+            System.out.println("Total duplicates: " + duplicates);
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
