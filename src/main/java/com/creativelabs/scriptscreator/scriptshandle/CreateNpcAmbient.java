@@ -60,18 +60,18 @@ public class CreateNpcAmbient {
 
         for (int n = 1; n <= amount; n++) {
 
-            String name = "NAME_Bauer";
-            String npcGuild = "BAU";
+            String name = "NAME_Buerger";
+            String npcGuild = "VLK";
             String npcName = "CITY_" + npcId + "_City_Ambient";
             String waypoint = "CITY";
             int SetAttributesToChapter = 3;
             int voice = 1 + n;
             String fight_tactic = "COWARD"; // MASTER / STRONG / COWARD
-            String weapon = "itmw_1h_bau_axe"; //ItMw_2h_Sld_Axe iron_mastersword
-            String armor = "ITAR_VLK_M2"; //ITAR_BDT_H ITAR_BDT_M ItAr_Leather_L itar_prisoner
+            String weapon = "ItMw_1h_Vlk_Axe"; //ItMw_2h_Sld_Axe iron_mastersword ItMw_1h_Vlk_Axe itmw_1h_bau_axe
+            String armor = "ITAR_VLK_M3"; //ITAR_BDT_H ITAR_BDT_M ItAr_Leather_L itar_prisoner
             String Mdl_ApplyOverlayMds = "Relaxed"; // Tired / Militia / Mage / Arrogance / Relaxed
             int FightSkills = 20;
-            String routine = "TA_Stand_Eating"; //TA_Smalltalk TA_Practice_Sword TA_Sit_Bench
+            String routine = "TA_Smalltalk"; //TA_Smalltalk TA_Practice_Sword TA_Sit_Bench TA_Stand_Eating
 
             String npcScript = "\n" +
                     "instance " + npcName + " (Npc_Default)\n" +
@@ -121,7 +121,7 @@ public class CreateNpcAmbient {
                     "};";
 
             String startupEntry = "Wld_InsertNpc \t\t(" + npcName + ", \"" + waypoint.toUpperCase() + "\");";
-
+            System.out.println(startupEntry);
 
             try {
                 //create npc
@@ -138,13 +138,13 @@ public class CreateNpcAmbient {
 
                 ArrayList<String> startupEntriesList = startupEntriesList(startupEntryFile);
                 startupEntriesList.add(startupEntryPath);
-                //FileWriter myWriterStartup = new FileWriter(startupEntryPath);
+                FileWriter myWriterStartup = new FileWriter(startupEntryPath);
 
                 for (String entry : startupEntriesList) {
                     //myWriterStartup.write(entry + "\n");
                     System.out.println(entry);
-                }*/
-                //myWriterStartup.close();
+                }
+                myWriterStartup.close();*/
 
                 //System.out.println("Successfully wrote to the file.");
             } catch (IOException e) {
@@ -167,7 +167,7 @@ public class CreateNpcAmbient {
         int maxNpcId = createNpcAmbient.findMaxNpcId(npcFolderPath);
         System.out.println("Pierwszy wolny numer dla npc: " + (maxNpcId + 1));
 
-        //createNpcAmbient.createNPC(3,maxNpcId+1);
+        createNpcAmbient.createNPC(4,maxNpcId+1);
 
     }
 }
