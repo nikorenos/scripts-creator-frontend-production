@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 public class QuestsStats {
 
     public String orderNpcOccurrence(List<String> npcNamesList) {
@@ -52,7 +53,7 @@ public class QuestsStats {
                 .map(Path::toFile)
                 .map(File::getName)
                 //.filter(name -> name.contains("DIA_MainQuest_LostLumberjack") || name.contains("DIA_MainQuest_Kick"))//Quest
-                .filter(name -> name.contains("Quest"))
+                .filter(name -> name.contains("Quest") && !name.contains("Aphrodisiac"))
                 .map(name -> folderPath + "/" + name)
                 .collect(Collectors.toList());
     }
@@ -65,6 +66,8 @@ public class QuestsStats {
         int heroDialogueLineCounter = 0;
         int npcDialogueLineCounter = 0;
         int allDialogueLineCounter = 0;
+        int amountOfSideQuests = 0;
+        int amountOfMainQuests = 0;
         int XPCounter = 0;
         List<String> npcNamesList = new ArrayList<>();
         List<String> allNpcNamesList = new ArrayList<>();
@@ -77,6 +80,11 @@ public class QuestsStats {
                 reader = new BufferedReader(new FileReader(file));
                 info = info +
                         "Zadanie: " + fileName + "\n";
+                if (fileName.contains("Main")) {
+                    amountOfMainQuests++;
+                } else {
+                    amountOfSideQuests++;
+                }
                 String line = reader.readLine();
                 while (line != null) {
                     line = reader.readLine();
@@ -84,9 +92,11 @@ public class QuestsStats {
                     if (line != null) {
                         if (line.startsWith("\tnpc")) {
                             npcName = line.substring(11, line.length()-1);
+                            /*if(line.contains("Roy")) {
+                                System.out.println(npcName + "," + fileName);
+                            }*/
                             npcNamesList.add(npcName);
                             allNpcNamesList.add(npcName);
-                            //System.out.println(line.substring(11, line.length()-1));
 
                         }
                         if (line.contains("AI_Output")) {
@@ -116,7 +126,9 @@ public class QuestsStats {
                 e.printStackTrace();
             }
         }
-        info = info + "Ilosc wszystkich lini dialogowych: " + allDialogueLineCounter + " \n" +
+        info = info + "Ilosc zadan glownych: " + amountOfMainQuests + " \n" +
+                "Ilosc zadan poocznych: " + amountOfSideQuests + " \n" +
+                "Ilosc wszystkich lini dialogowych: " + allDialogueLineCounter + " \n" +
                 "Ilosc wszystkich lini dialogowych Morrisa: " + heroDialogueLineCounter + " \n" +
                 "Ilosc wszystkich lini dialogowych npc: " + npcDialogueLineCounter + "\n" +
                 "Ilosc wszystkich dialogow z npc: " + orderNpcOccurrence(allNpcNamesList);
