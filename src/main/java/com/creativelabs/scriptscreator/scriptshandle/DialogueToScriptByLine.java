@@ -69,7 +69,8 @@ public class DialogueToScriptByLine {
         String previousNpcName = "";
         String previousDialogueName = "";
         String questEntry;
-        gothicFolderPathPath = gothicFolderPathPath + "/_Work/data/Scripts/Content/Story/Dialoge/DIA_MainQuest_" + questCodeName + ".d";
+        //gothicFolderPathPath = gothicFolderPathPath + "/_Work/data/Scripts/Content/Story/Dialoge/DIA_MainQuest_" + questCodeName + ".d";
+        gothicFolderPathPath = "E:/DIA_MainQuest_" + questCodeName + ".d";
         questCodeName = "TOPIC_" + questCodeName;
 
 
@@ -173,6 +174,7 @@ public class DialogueToScriptByLine {
 
                     if (line.startsWith("Quest")) {
                         String[] entryParts = convertEntry(line);
+                        System.out.println(line);
                         questEntry = entryParts[1];
                         writeScript.write("\n");
                         writeScript.write("\tENTRY_MISSION(" + questCodeName + ", \"" + questEntry + "\");");
@@ -230,8 +232,8 @@ public class DialogueToScriptByLine {
     public static void main(String[] args) {
         DialogueToScriptByLine dialogue = new DialogueToScriptByLine();
         String dialoguePath = "E:/dialogue.d";
-        String gothicPath = "E:/Gothic 2";
-        String questCodeName = "MainStory";
+        String gothicPath = "E:/Gothic II";
+        String questCodeName = "Precious";
         dialogue.writeScript(dialoguePath, gothicPath, questCodeName);
     }
 }

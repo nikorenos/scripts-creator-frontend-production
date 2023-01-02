@@ -25,6 +25,7 @@ public class CreateNpcAmbient {
                 .map(Integer::parseInt)
                 .mapToInt(Integer::intValue).max().getAsInt();
     }
+
     public List<String> listNpc(String folderPath) throws IOException {
         return Files.list(Paths.get(folderPath))
                 .filter(Files::isRegularFile)
@@ -77,7 +78,7 @@ public class CreateNpcAmbient {
                     "instance " + npcName + " (Npc_Default)\n" +
                     "{\n" +
                     "\t// ------ NSC ------\n" +
-                    "\tname \t\t= "+ name + ";\n" +
+                    "\tname \t\t= " + name + ";\n" +
                     "\tguild \t\t= GIL_" + npcGuild + ";\n" +
                     "\tid \t\t\t= " + npcId + ";\n" +
                     "\tvoice \t\t= " + voice + ";\n" +
@@ -162,12 +163,12 @@ public class CreateNpcAmbient {
     public static void main(String[] args) throws IOException {
 
         CreateNpcAmbient createNpcAmbient = new CreateNpcAmbient();
-        String gothicFolder = "E:/Gothic 2";
+        String gothicFolder = "E:/Gothic II";
         String npcFolderPath = gothicFolder + "/_Work/data/Scripts/Content/Story/NPC";
         int maxNpcId = createNpcAmbient.findMaxNpcId(npcFolderPath);
         System.out.println("Pierwszy wolny numer dla npc: " + (maxNpcId + 1));
 
-        createNpcAmbient.createNPC(4,maxNpcId+1);
+        //createNpcAmbient.createNPC(4,maxNpcId+1);
 
     }
 }

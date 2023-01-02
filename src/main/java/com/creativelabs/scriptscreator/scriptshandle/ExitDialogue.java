@@ -96,7 +96,7 @@ public class ExitDialogue {
 
     public static void main(String[] args) throws IOException {
         ExitDialogue exitDialogue = new ExitDialogue();
-        String gothicFolder = "E:/Gothic 2";
+        String gothicFolder = "E:/Gothic II";
         exitDialogue.saveExitDialogues(gothicFolder);
     }
 }

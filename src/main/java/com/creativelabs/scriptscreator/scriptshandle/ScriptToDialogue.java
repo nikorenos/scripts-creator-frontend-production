@@ -176,7 +176,7 @@ public class ScriptToDialogue {
 
     public static void main(String[] args) {
 
-        String path = "E:/input.d";
+        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_Friends.d";
         String startMission = "START_MISSION";
         String entry = "ENTRY_MISSION";
         String closeMission = "CLOSE_MISSION";
@@ -203,7 +203,7 @@ public class ScriptToDialogue {
                     writeDialogue.write("\n");
                     System.out.println(line);
                 }
-                if (line.contains("AI_Output")) {
+                if (line.toLowerCase().contains("AI_Output".toLowerCase())) {
                     String dialogueLine = scriptToDialogue.convertAIOutput(line);
                     System.out.println("dialogueLine: " + dialogueLine);
                     writeDialogue.write(dialogueLine + "\n");
