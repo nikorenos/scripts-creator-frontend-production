@@ -1,5 +1,7 @@
 package com.creativelabs.scriptscreator.excel;
 
+import com.creativelabs.scriptscreator.scriptshandle.ExtractDialoguesFromScript;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,22 +16,22 @@ public class Excel {
 
     public static void main(String[] args) throws IOException {
 
-        List<List<String>> dialogues = new ArrayList<>();
-
-        List<String> dialogue = new ArrayList<>();
-        dialogue.add("DIA_Otmar_TempleGate_12_01");
-        dialogue.add("");
-        dialogue.add("Masz pieczęć wyznawców? Doskonale!");
-
-        dialogues.add(dialogue);
-
-        List<String> dialogue2 = new ArrayList<>();
-        dialogue2.add("DIA_Otmar_TempleGate_15_02");
-        dialogue2.add("Morris");
-        dialogue2.add("Tak, co dalej?");
-        dialogues.add(dialogue2);
-
-        System.out.println(dialogues);
+//        List<List<String>> dialogues = new ArrayList<>();
+//
+//        List<String> dialogue = new ArrayList<>();
+//        dialogue.add("DIA_Otmar_TempleGate_12_01");
+//        dialogue.add("");
+//        dialogue.add("Masz pieczęć wyznawców? Doskonale!");
+//
+//        dialogues.add(dialogue);
+//
+//        List<String> dialogue2 = new ArrayList<>();
+//        dialogue2.add("DIA_Otmar_TempleGate_15_02");
+//        dialogue2.add("Morris");
+//        dialogue2.add("Tak, co dalej?");
+//        dialogues.add(dialogue2);
+//
+//        System.out.println(dialogues);
 
 
 
@@ -54,7 +56,6 @@ public class Excel {
 
         Cell headerCell = header.createCell(0);
         headerCell.setCellValue("Nazwa kwestii");
-        //headerCell.setCellStyle(headerStyle);
 
         headerCell = header.createCell(1);
         headerCell.setCellValue("Kto wypowiada");
@@ -65,18 +66,36 @@ public class Excel {
         headerCell = header.createCell(3);
         headerCell.setCellValue("Status");
 
-        CellStyle style = workbook.createCellStyle();
-        style.setWrapText(true);
+        CellStyle specialStyle = workbook.createCellStyle();
+        specialStyle.setWrapText(true);
+        XSSFFont greenDialogueFont = ((XSSFWorkbook) workbook).createFont();
+        greenDialogueFont.setFontName("Arial");
+        greenDialogueFont.setColor(IndexedColors.LIGHT_BLUE.getIndex());
+        specialStyle.setFont(greenDialogueFont);
+
+        CellStyle normalStyle = workbook.createCellStyle();
+        normalStyle.setWrapText(true);
+        XSSFFont normalDialogueFont = ((XSSFWorkbook) workbook).createFont();
+        normalDialogueFont.setFontName("Arial");
+        normalStyle.setFont(normalDialogueFont);
 
 
+        ExtractDialoguesFromScript extractDialoguesFromScript = new ExtractDialoguesFromScript();
+        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_WoodForFeast.d";
+        List<List<String>> dialogues = extractDialoguesFromScript.extractDialoguesFromScript(scriptPath);
         for (int i = 0; i < dialogues.size(); i++) {
 
             Row row = sheet.createRow(i+1);
-
+            String currentNpc = "";
             for (int n = 0; n < dialogues.get(i).size(); n++) {
+                currentNpc = dialogues.get(i).get(1);
                 Cell cell = row.createCell(n);
                 cell.setCellValue(dialogues.get(i).get(n));
-                cell.setCellStyle(style);
+                if ((n == 2 ) && currentNpc.equals("MORRIS"))  {
+                    cell.setCellStyle(specialStyle);
+                } else {
+                    cell.setCellStyle(normalStyle);
+                }
             }
         }
 

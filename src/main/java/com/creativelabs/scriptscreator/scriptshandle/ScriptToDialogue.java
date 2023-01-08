@@ -16,8 +16,6 @@ public class ScriptToDialogue {
         while (startDialogueNameIndex != -1) {
             startDialogueNameIndex = line.indexOf(findStrInstance, startDialogueNameIndex);
             endDialogueNameIndex = line.indexOf(findStrC_INFO, endDialogueNameIndex);
-            System.out.println(startDialogueNameIndex);
-            System.out.println(startDialogueNameIndex);
 
             if (startDialogueNameIndex != -1) {
                 startDialogueNameIndex += findStrInstance.length();
