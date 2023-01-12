@@ -10,12 +10,12 @@ public class ScriptToDialogue {
         String dialogueName;
         int startDialogueNameIndex = 0;
         int endDialogueNameIndex = 0;
-        String findStrInstance = "INSTANCE ";
+        String findStrInstance = "instance ";
         String findStrC_INFO = " (C_INFO)";
 
         while (startDialogueNameIndex != -1) {
-            startDialogueNameIndex = line.indexOf(findStrInstance, startDialogueNameIndex);
-            endDialogueNameIndex = line.indexOf(findStrC_INFO, endDialogueNameIndex);
+            startDialogueNameIndex = line.toLowerCase().indexOf(findStrInstance, startDialogueNameIndex);
+            endDialogueNameIndex = line.toLowerCase().indexOf(findStrC_INFO.toLowerCase(), endDialogueNameIndex);
 
             if (startDialogueNameIndex != -1) {
                 startDialogueNameIndex += findStrInstance.length();

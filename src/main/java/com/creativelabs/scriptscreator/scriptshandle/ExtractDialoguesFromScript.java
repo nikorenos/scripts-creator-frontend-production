@@ -7,6 +7,7 @@ import java.util.List;
 
 
 public class ExtractDialoguesFromScript {
+    int inconsistenciesCounter = 0;
 
     public String convertMissionEntry(String line) {
         String entry = "";
@@ -51,6 +52,8 @@ public class ExtractDialoguesFromScript {
                 if (line.contains("npc") && line.contains("=") && line.contains(";")) {
                     npcInstance = getNpcInstance(line);
                     if (!npcName.equals(npcInstance)) {
+                        inconsistenciesCounter++;
+                        System.out.println("----------------------------------");
                         System.out.println("Niezgodnosc npc name z npc instance w dialogu: DIA_" + currentDialogueInstance);
                         System.out.println("npcName:" + npcName);
                         System.out.println("npcInstance:" + npcInstance);
@@ -72,6 +75,9 @@ public class ExtractDialoguesFromScript {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println();
+        System.out.println("Wszystkich niezgodnosci: " + inconsistenciesCounter);
+        System.out.println();
         return dialogues;
     }
 
@@ -124,6 +130,8 @@ public class ExtractDialoguesFromScript {
                 dialogueName = line.substring(findStrDialogueNameStartIndex-1, findStrDialogueNameEndIndex-2);
                 npcDialogueName = dialogueName.substring(4, dialogueName.substring(4).indexOf("_") + 4);
                 if (!npcName.equals(npcDialogueName)) {
+                    inconsistenciesCounter++;
+                    System.out.println("----------------------------------");
                     System.out.println("Niezgodnosc nazwy npc z dialogue instance z nazwa npc w AI_Output:");
                     System.out.println(dialogueName);
                 }
