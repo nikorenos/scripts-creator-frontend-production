@@ -8,10 +8,30 @@ import java.util.List;
 
 public class ExtractDialoguesFromScript {
 
+    public String convertMissionEntry(String line) {
+        String entry = "";
+        int startDialogueNameIndex = 0;
+        int endDialogueNameIndex = 0;
+        String findStr1Instance = ", \"";
+        String findStr2Instance = "\");";
+
+        while (startDialogueNameIndex != -1) {
+            startDialogueNameIndex = line.indexOf(findStr1Instance, startDialogueNameIndex);
+            endDialogueNameIndex = line.indexOf(findStr2Instance, endDialogueNameIndex);
+
+            if (startDialogueNameIndex != -1) {
+                startDialogueNameIndex += findStr1Instance.length();
+                endDialogueNameIndex += findStr2Instance.length();
+                entry = line.substring(startDialogueNameIndex, endDialogueNameIndex - 3);
+            }
+        }
+        return entry;
+    }
+
     public List<List<String>> extractDialoguesFromScript(String path) throws IOException {
         List<List<String>> dialogues = new ArrayList<>();
         String npcName = "";
-        String npcInstance = "";
+        String npcInstance;
         String currentDialogueInstance = "";
         ScriptToDialogue scriptToDialogue = new ScriptToDialogue();
         File file = new File(path);
@@ -28,17 +48,21 @@ public class ExtractDialoguesFromScript {
                     dialogues.add(Arrays.asList("", "", ""));
                 }
 
-                if (line.toLowerCase().contains("npc".toLowerCase()) && line.contains("=") && line.contains(";")) {
+                if (line.contains("npc") && line.contains("=") && line.contains(";")) {
                     npcInstance = getNpcInstance(line);
                     if (!npcName.equals(npcInstance)) {
                         System.out.println("Niezgodnosc npc name z npc instance w dialogu: DIA_" + currentDialogueInstance);
-                        System.out.println(npcName);
-                        System.out.println(npcInstance);
+                        System.out.println("npcName:" + npcName);
+                        System.out.println("npcInstance:" + npcInstance);
                     }
                 }
 
                 if (line.toLowerCase().contains("AI_Output".toLowerCase())) {
                     dialogues.add(convertAIOutput(line, npcName));
+                }
+
+                if (line.toLowerCase().contains("mission")) {
+                    dialogues.add(Arrays.asList("", "Wpis do dziennika", convertMissionEntry(line)));
                 }
 
 
@@ -75,15 +99,15 @@ public class ExtractDialoguesFromScript {
         int startAI_OutputIndex = 0;
         int startDialogueIndex = 0;
         int findStrDialogueNameStartIndex = 0;
-        int findStrDialogueNameEndIndex = 0;
+        int findStrDialogueNameEndIndex;
         String findStrAI_Output = "AI_Output";
         String findStrDialogueStart = "); //";
         String findStrDialogueNameStart = "\"";
         String findStrDialogueNameEnd = "\")";
-        String speaker = "";
-        String text = "";
-        String dialogueName = "";
-        String npcDialogueName = "";
+        String speaker;
+        String text;
+        String dialogueName;
+        String npcDialogueName;
 
         while (startAI_OutputIndex != -1) {
             startAI_OutputIndex = line.indexOf(findStrAI_Output, startAI_OutputIndex);
