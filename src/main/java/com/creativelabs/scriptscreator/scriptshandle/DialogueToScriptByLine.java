@@ -235,7 +235,7 @@ public class DialogueToScriptByLine {
         String gothicPath = "E:/Gothic II";
         String questCodeName = "Test";
         dialogue.writeScript(dialoguePath, gothicPath, questCodeName);
-        OpenFile.openFile("E:/DIA_MainQuest_" + questCodeName + ".d");
+        FileOperations.openFile("E:/DIA_MainQuest_" + questCodeName + ".d");
     }
 }
 

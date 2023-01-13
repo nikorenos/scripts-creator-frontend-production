@@ -1,7 +1,7 @@
 package com.creativelabs.scriptscreator.excel;
 
 import com.creativelabs.scriptscreator.scriptshandle.ExtractDialoguesFromScript;
-import com.creativelabs.scriptscreator.scriptshandle.OpenFile;
+import com.creativelabs.scriptscreator.scriptshandle.FileOperations;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -115,7 +115,7 @@ public class CreateExcelDoc {
         String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_Justice.d";
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         createExcelDoc.createExcelDoc(scriptPath);
-        OpenFile.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
+        FileOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
     }
 
 }
