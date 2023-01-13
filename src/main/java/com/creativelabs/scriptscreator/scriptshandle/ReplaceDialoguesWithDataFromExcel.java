@@ -1,13 +1,14 @@
 package com.creativelabs.scriptscreator.scriptshandle;
 
+import com.creativelabs.scriptscreator.excel.ReadExcelFile;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ReplaceText {
+public class ReplaceDialoguesWithDataFromExcel {
 
     private void replaceDialoguesAndLogEntriesInScript(String scriptPath, List<List<String>> dialogues) {
         StringBuilder script = new StringBuilder();
@@ -23,9 +24,6 @@ public class ReplaceText {
                 while (line != null) {
                     if ((dialogues.size() > counter)) {
                         if (line.toLowerCase().contains("AI_Output".toLowerCase())) {
-                            System.out.println("size: " + dialogues.size());
-                            System.out.println("licznik:" + counter);
-                            System.out.println(dialogues.get(counter));
                             if (line.contains(dialogues.get(counter).get(0))) {
                                 String oldDialogue = line.substring(line.indexOf("\"); //") + 6);
                                 line = line.replace(oldDialogue, dialogues.get(counter).get(1));
@@ -34,11 +32,12 @@ public class ReplaceText {
                             }
 
                             counter++;
-                        } else if (line.toLowerCase().contains("mission")) {
-//                        if (dialogues.size() >= counter) {
-//
-//                        }
-//                        counter++;
+                        }
+                        if (line.toLowerCase().contains("mission")) {
+                            if (dialogues.size() >= counter) {
+                                line = line.substring(0, line.indexOf("\"") + 1) + dialogues.get(counter).get(1) + "\");";
+                            }
+                            counter++;
                         }
                     }
                     script.append(line).append("\n");
@@ -63,22 +62,12 @@ public class ReplaceText {
 
 
     public static void main(String[] args) throws IOException {
-        ReplaceText replaceText = new ReplaceText();
-        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_HelpGorn.d";
+        ReplaceDialoguesWithDataFromExcel replaceDialoguesWithDataFromExcel = new ReplaceDialoguesWithDataFromExcel();
+        ReadExcelFile readExcelFile = new ReadExcelFile();
+        String excelFilePath = "E:\\dev\\scripts-creator-frontend-production\\temp.xlsx";
+        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_WoodForFeast.d";
 
-        List<List<String>> dialogues = new ArrayList<>();
-
-        List<String> dialogue = new ArrayList<>();
-        dialogue.add("DIA_Gorn_ThanksForHelp_12_01");
-        dialogue.add("Uff, miałem ciężką przeprawę z tymi bandytami. Kim jesteś nieznajomy...");
-
-        dialogues.add(dialogue);
-
-        List<String> dialogue2 = new ArrayList<>();
-        dialogue2.add("DIA_Gorn_ThanksForHelp_15_02");
-        dialogue2.add("Myśliwy Morris. A ty jesteś Gorn???");
-        dialogues.add(dialogue2);
-
-        replaceText.replaceDialoguesAndLogEntriesInScript(path, dialogues);
+        List<List<String>> dialogues = readExcelFile.readExcelFile(excelFilePath);
+        replaceDialoguesWithDataFromExcel.replaceDialoguesAndLogEntriesInScript(path, dialogues);
     }
 }

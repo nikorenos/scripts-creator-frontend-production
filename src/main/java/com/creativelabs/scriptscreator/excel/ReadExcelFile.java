@@ -21,7 +21,7 @@ public class ReadExcelFile {
         List<List<String>> dialogues = new ArrayList<>();
         for (Row row : sheet) {
 
-            if (!row.getCell(0).getStringCellValue().isEmpty() && !row.getCell(0).getStringCellValue().equals("Nazwa kwestii")) {
+            if (!row.getCell(1).getStringCellValue().isEmpty() && !row.getCell(0).getStringCellValue().equals("Nazwa kwestii")) {
                 List<String> dialogue = new ArrayList<>();
                 dialogue.add(row.getCell(0).getStringCellValue());
                 dialogue.add(row.getCell(2).getStringCellValue());
