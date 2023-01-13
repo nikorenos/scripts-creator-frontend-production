@@ -48,10 +48,10 @@ public class CreateExcelDoc {
 
         CellStyle specialStyle = workbook.createCellStyle();
         specialStyle.setWrapText(true);
-        XSSFFont greenDialogueFont = workbook.createFont();
-        greenDialogueFont.setFontName("Arial");
-        greenDialogueFont.setColor(IndexedColors.LIGHT_BLUE.getIndex());
-        specialStyle.setFont(greenDialogueFont);
+        XSSFFont lightBlueDialogueFont = workbook.createFont();
+        lightBlueDialogueFont.setFontName("Arial");
+        lightBlueDialogueFont.setColor(IndexedColors.LIGHT_BLUE.getIndex());
+        specialStyle.setFont(lightBlueDialogueFont);
 
         CellStyle specialStyle2 = workbook.createCellStyle();
         specialStyle2.setWrapText(true);
@@ -59,6 +59,13 @@ public class CreateExcelDoc {
         orangeDialogueFont.setFontName("Arial");
         orangeDialogueFont.setColor(IndexedColors.ORANGE.getIndex());
         specialStyle2.setFont(orangeDialogueFont);
+
+        CellStyle specialStyle3 = workbook.createCellStyle();
+        specialStyle3.setWrapText(true);
+        XSSFFont greenDialogueFont = workbook.createFont();
+        greenDialogueFont.setFontName("Arial");
+        greenDialogueFont.setColor(IndexedColors.RED.getIndex());
+        specialStyle3.setFont(greenDialogueFont);
 
         CellStyle normalStyle = workbook.createCellStyle();
         normalStyle.setWrapText(true);
@@ -72,18 +79,24 @@ public class CreateExcelDoc {
         for (int i = 0; i < dialogues.size(); i++) {
 
             Row row = sheet.createRow(i + 1);
-            String currentNpc;
+            String currentEntry;
             for (int n = 0; n < dialogues.get(i).size(); n++) {
-                currentNpc = dialogues.get(i).get(1);
+                currentEntry = dialogues.get(i).get(1);
                 Cell cell = row.createCell(n);
                 cell.setCellValue(dialogues.get(i).get(n));
                 cell.setCellStyle(normalStyle);
                 if (n == 2) {
-                    if (currentNpc.equals("MORRIS")) {
+                    if (currentEntry.equals("MORRIS")) {
                         cell.setCellStyle(specialStyle);
                     }
-                    if (currentNpc.equals("Wpis do dziennika")) {
+                    if (currentEntry.equals("Wpis do dziennika")) {
                         cell.setCellStyle(specialStyle2);
+                    }
+                    if (currentEntry.equals("Description")) {
+                        cell.setCellStyle(specialStyle2);
+                    }
+                    if (currentEntry.equals("Choice")) {
+                        cell.setCellStyle(specialStyle3);
                     }
                 }
             }
@@ -99,7 +112,7 @@ public class CreateExcelDoc {
     }
 
     public static void main(String[] args) throws IOException {
-        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_WineForFeast.d";
+        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_Justice.d";
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         createExcelDoc.createExcelDoc(scriptPath);
         OpenFile.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
