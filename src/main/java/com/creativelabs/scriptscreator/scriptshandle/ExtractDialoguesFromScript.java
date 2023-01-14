@@ -12,42 +12,36 @@ public class ExtractDialoguesFromScript {
     public String convertChoiceEntry(String line) {
         int startIndex = 0;
         int endIndex = 0;
-        String findStr1Instance = "\"";
-        String findStr2Instance = "\",";
+        String findStr1 = "\"";
+        String findStr2 = "\",";
 
-        startIndex = line.indexOf(findStr1Instance, startIndex);
-        endIndex = line.indexOf(findStr2Instance, endIndex);
-        return line.substring(startIndex + findStr1Instance.length(), endIndex);
+        startIndex = line.indexOf(findStr1, startIndex);
+        endIndex = line.indexOf(findStr2, endIndex);
+        return line.substring(startIndex + findStr1.length(), endIndex);
     }
     public String convertMissionEntry(String line) {
         int startIndex = 0;
         int endIndex = 0;
-        String findStr1Instance = ", \"";
-        String findStr2Instance = "\");";
+        String findStr1 = ", \"";
+        String findStr2 = "\");";
 
-        startIndex = line.indexOf(findStr1Instance, startIndex);
-        endIndex = line.indexOf(findStr2Instance, endIndex);
+        startIndex = line.indexOf(findStr1, startIndex);
+        endIndex = line.indexOf(findStr2, endIndex);
         return line.substring(startIndex + 3, endIndex);
     }
 
     public String convertDescriptionEntry(String line) {
         int startIndex = 0;
         int endIndex = 0;
-        String findStr1Instance = "\"";
-        String findStr2Instance = "\";";
-        startIndex = line.indexOf(findStr1Instance, startIndex);
-        endIndex = line.indexOf(findStr2Instance, endIndex);
+        String findStr1 = "\"";
+        String findStr2 = "\";";
+        startIndex = line.indexOf(findStr1, startIndex);
+        endIndex = line.indexOf(findStr2, endIndex);
         return line.substring(startIndex + 1, endIndex);
     }
 
     public String getNpcInstance(String line) {
-        int startDialogueNameIndex = 0;
-        int endDialogueNameIndex = 0;
-        String findStr1Instance = "= \t";
-        String findStr2Instance = ";";
-        startDialogueNameIndex = line.indexOf(findStr1Instance, startDialogueNameIndex);
-        endDialogueNameIndex = line.indexOf(findStr2Instance, endDialogueNameIndex);
-        return line.substring(startDialogueNameIndex + findStr1Instance.length(), endDialogueNameIndex);
+        return (line.substring(line.indexOf("="))).replaceAll("\\P{L}+", "");
     }
 
     public List<String> convertAIOutput(String line, String npcName) {
@@ -139,7 +133,7 @@ public class ExtractDialoguesFromScript {
                     dialogues.add(convertAIOutput(line, npcName));
                 }
 
-                if (line.toLowerCase().contains("Info_AddChoice".toLowerCase())) {
+                if (line.toLowerCase().contains("Info_AddChoice".toLowerCase()) && line.contains("\"")) {
                     dialogues.add(Arrays.asList("", "Choice", convertChoiceEntry(line)));
                 }
 
@@ -160,7 +154,7 @@ public class ExtractDialoguesFromScript {
         return dialogues;
     }
     public static void main(String[] args) throws IOException {
-        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_Woodcutting.d";
+        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_City_Aphrodisiac.d";
         ExtractDialoguesFromScript dialoguesFromScript = new ExtractDialoguesFromScript();
         List<List<String>> list = dialoguesFromScript.extractDialoguesFromScript(path);
         System.out.println(list);
