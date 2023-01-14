@@ -17,8 +17,8 @@ public class CreateExcelDoc {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
         Sheet sheet = workbook.createSheet("Persons");
-        sheet.setColumnWidth(0, 16000);
-        sheet.setColumnWidth(1, 4000);
+        sheet.setColumnWidth(0, 14000);
+        sheet.setColumnWidth(1, 5000);
         sheet.setColumnWidth(2, 20000);
 
         Row header = sheet.createRow(0);
@@ -112,7 +112,7 @@ public class CreateExcelDoc {
     }
 
     public static void main(String[] args) throws IOException {
-        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_Justice.d";
+        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_City_Alcoholic.d";
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         createExcelDoc.createExcelDoc(scriptPath);
         FileOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");

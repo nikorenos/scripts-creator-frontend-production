@@ -6,25 +6,14 @@ import java.io.*;
 public class ScriptToDialogue {
 
     public String[] convertInstance(String line) {
-        String[] dialogueparts = null;
         String dialogueName;
-        int startDialogueNameIndex = 0;
-        int endDialogueNameIndex = 0;
-        String findStrInstance = "instance ";
-        String findStrC_INFO = " (C_INFO)";
-
-        while (startDialogueNameIndex != -1) {
-            startDialogueNameIndex = line.toLowerCase().indexOf(findStrInstance, startDialogueNameIndex);
-            endDialogueNameIndex = line.toLowerCase().indexOf(findStrC_INFO.toLowerCase(), endDialogueNameIndex);
-
-            if (startDialogueNameIndex != -1) {
-                startDialogueNameIndex += findStrInstance.length();
-                endDialogueNameIndex += findStrC_INFO.length();
-                dialogueName = line.substring(startDialogueNameIndex + 4, endDialogueNameIndex - findStrC_INFO.length());
-                dialogueparts = dialogueName.split("_");
-            }
+        String findStrInstance = "DIA_";
+        String findStrC_INFO = "C_INFO)";
+        dialogueName = line.substring(line.indexOf(findStrInstance) + findStrInstance.length(), line.toLowerCase().indexOf(findStrC_INFO.toLowerCase()));
+        if (dialogueName.contains(" ")) {
+            dialogueName = dialogueName.substring(0, dialogueName.indexOf(" "));
         }
-        return dialogueparts;
+        return dialogueName.split("_");
     }
 
     public String convertChoices(String line) {
@@ -192,14 +181,12 @@ public class ScriptToDialogue {
                 FileWriter writeDialogue = new FileWriter(dialoguePath);
 
             while (line != null) {
-                System.out.println(line);
                 if (line.contains("INSTANCE")) {
                     String[] dialogueParts = scriptToDialogue.convertInstance(line);
                     writeDialogue.write("\n");
                     writeDialogue.write("[b]Dialogue: " + dialogueParts[0] + "-" + dialogueParts[1] + "[/b]");
                     writeDialogue.write("\n");
                     writeDialogue.write("\n");
-                    System.out.println(line);
                 }
                 if (line.toLowerCase().contains("AI_Output".toLowerCase())) {
                     String dialogueLine = scriptToDialogue.convertAIOutput(line);

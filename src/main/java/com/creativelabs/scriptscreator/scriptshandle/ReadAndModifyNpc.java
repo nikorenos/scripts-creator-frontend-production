@@ -67,7 +67,6 @@ public class ReadAndModifyNpc {
                         } else {
                             writeDialogue.write(line + "\n");
                         }
-                        //System.out.println(line);
                         line = reader.readLine();
                     }
 

@@ -3,12 +3,9 @@ package com.creativelabs.scriptscreator.ui;
 import com.creativelabs.scriptscreator.MainView;
 import com.creativelabs.scriptscreator.scriptshandle.ReadStringByLine;
 import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
@@ -57,7 +54,7 @@ public class DialogueToScriptFromStringView extends VerticalLayout {
 
         addClassName("content");
         content.setSizeFull();
-        return  content;
+        return content;
     }
 
     public static void main(String[] args) {
@@ -66,7 +63,7 @@ public class DialogueToScriptFromStringView extends VerticalLayout {
                 "H: Kto taki?\n";
         String[] lines = myString.split(System.getProperty("line.separator"));
 
-        for (String line: lines) {
+        for (String line : lines) {
             System.out.println(line);
 
         }

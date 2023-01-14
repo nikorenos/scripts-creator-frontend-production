@@ -174,7 +174,6 @@ public class DialogueToScriptByLine {
 
                     if (line.startsWith("Quest")) {
                         String[] entryParts = convertEntry(line);
-                        System.out.println(line);
                         questEntry = entryParts[1];
                         writeScript.write("\n");
                         writeScript.write("\tENTRY_MISSION(" + questCodeName + ", \"" + questEntry + "\");");
