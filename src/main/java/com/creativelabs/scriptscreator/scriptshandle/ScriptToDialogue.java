@@ -25,9 +25,9 @@ public class ScriptToDialogue {
         String questName;
         String entry;
         String beginning = "[color=orange][b]BeginQuest:[/b] ";
+        String topic = "TOPIC_";
 
-        questName = line.substring(line.indexOf("(") + 1, line.indexOf(","));
-        System.out.println(questName);
+        questName = line.substring(line.indexOf(topic) + topic.length(), line.indexOf(","));
         entry = line.substring(line.indexOf("\"") + 1, line.indexOf("\")"));
 
         if (findString.equals("ENTRY_MISSION")) {
