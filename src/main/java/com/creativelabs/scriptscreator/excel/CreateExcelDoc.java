@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CreateExcelDoc {
 
-    public void createExcelDoc(String scriptPath) throws IOException {
+    public void createExcelDoc(List<List<String>> dialogues) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
         Sheet sheet = workbook.createSheet("Persons");
@@ -73,9 +73,6 @@ public class CreateExcelDoc {
         normalDialogueFont.setFontName("Arial");
         normalStyle.setFont(normalDialogueFont);
 
-
-        ExtractDialoguesFromScript extractDialoguesFromScript = new ExtractDialoguesFromScript();
-        List<List<String>> dialogues = extractDialoguesFromScript.extractDialoguesFromScript(scriptPath);
         for (int i = 0; i < dialogues.size(); i++) {
 
             Row row = sheet.createRow(i + 1);
@@ -112,9 +109,11 @@ public class CreateExcelDoc {
     }
 
     public static void main(String[] args) throws IOException {
-        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_City_Alcoholic.d";
+        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_Hunter_Bond.d";
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
-        createExcelDoc.createExcelDoc(scriptPath);
+        ExtractDialoguesFromScript extractDialoguesFromScript = new ExtractDialoguesFromScript();
+        List<List<String>> dialogues = extractDialoguesFromScript.extractDialoguesFromScript(scriptPath);
+        createExcelDoc.createExcelDoc(dialogues);
         FileOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
     }
 

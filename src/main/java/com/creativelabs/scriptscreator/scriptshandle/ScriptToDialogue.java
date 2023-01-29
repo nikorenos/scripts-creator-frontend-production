@@ -17,52 +17,19 @@ public class ScriptToDialogue {
     }
 
     public String convertChoices(String line) {
-        int startString1 = 0;
-        int startString2 = 0;
-        int startString3 = 0;
-        String findString = ",\"";
-        String findString2 = "\",";
-        String findString3 = ");";
-        String option = "";
-        String optionNumber = "";
-
-        while (startString1 != -1) {
-            startString1 = line.indexOf(findString, startString1);
-            startString2 = line.indexOf(findString2, startString2);
-            startString3 = line.indexOf(findString3, startString3);
-
-            if (startString1 != -1) {
-                startString1 += findString.length();
-                startString2 += findString2.length();
-                option = line.substring(startString1, startString2 - 2);
-                optionNumber = line.substring(startString3 - 1, startString3);
-            }
-        }
-        return "C" + optionNumber + ": " + option;
+        String optionNumber = line.substring(line.length()-3, line.length()-2);
+        return "C" + optionNumber + ": " + line.substring(line.indexOf("\"") + 1, line.indexOf("\","));
     }
 
     public String convertMissionEntry(String line, String findString) {
-        int startMissionIndex = 0;
-        int startEntryIndex = 0;
-        int findStr2Index = 0;
-        String findStrEntry = ", \"";
-        String findStr2 = "\");";
-        String questName = "";
-        String entry = "";
+        String questName;
+        String entry;
         String beginning = "[color=orange][b]BeginQuest:[/b] ";
 
-        while (startMissionIndex != -1) {
-            startMissionIndex = line.indexOf(findString, startMissionIndex);
-            startEntryIndex = line.indexOf(findStrEntry, startEntryIndex);
-            findStr2Index = line.indexOf(findStr2, findStr2Index);
+        questName = line.substring(line.indexOf("(") + 1, line.indexOf(","));
+        System.out.println(questName);
+        entry = line.substring(line.indexOf("\"") + 1, line.indexOf("\")"));
 
-            if (startMissionIndex != -1) {
-                startMissionIndex += findString.length();
-                startEntryIndex += findStrEntry.length();
-                questName = line.substring(startMissionIndex + 7, startEntryIndex - 3);
-                entry = line.substring(startEntryIndex, findStr2Index);
-            }
-        }
         if (findString.equals("ENTRY_MISSION")) {
             beginning = "[color=orange][b]Quest:[/b] ";
         }
@@ -83,14 +50,12 @@ public class ScriptToDialogue {
         while (startAI_OutputIndex != -1) {
             startAI_OutputIndex = line.indexOf(findStrAI_Output, startAI_OutputIndex);
             startDialogueIndex = line.indexOf(findStrDialogueStart, startDialogueIndex);
-            System.out.println("startAI_OutputIndex: " + startAI_OutputIndex);
-            System.out.println("startDialogueIndex: " + startDialogueIndex);
 
             if (startAI_OutputIndex != -1) {
                 startAI_OutputIndex += findStrAI_Output.length()+1;
                 startDialogueIndex += findStrDialogueStart.length();
                 speaker = line.substring(startAI_OutputIndex + 1, startAI_OutputIndex + 6);
-                System.out.println(speaker);
+                //System.out.println(speaker);
                 if (speaker.equals("other")) {
                     speaker = "[color=green]H: ";
                     text = line.substring(startDialogueIndex) + "[/color]";
@@ -163,7 +128,7 @@ public class ScriptToDialogue {
 
     public static void main(String[] args) {
 
-        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_Friends.d";
+        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_NowOrNever.d";
         String startMission = "START_MISSION";
         String entry = "ENTRY_MISSION";
         String closeMission = "CLOSE_MISSION";
@@ -181,7 +146,7 @@ public class ScriptToDialogue {
                 FileWriter writeDialogue = new FileWriter(dialoguePath);
 
             while (line != null) {
-                if (line.contains("INSTANCE")) {
+                if (line.toLowerCase().contains("INSTANCE".toLowerCase())) {
                     String[] dialogueParts = scriptToDialogue.convertInstance(line);
                     writeDialogue.write("\n");
                     writeDialogue.write("[b]Dialogue: " + dialogueParts[0] + "-" + dialogueParts[1] + "[/b]");
@@ -190,7 +155,6 @@ public class ScriptToDialogue {
                 }
                 if (line.toLowerCase().contains("AI_Output".toLowerCase())) {
                     String dialogueLine = scriptToDialogue.convertAIOutput(line);
-                    System.out.println("dialogueLine: " + dialogueLine);
                     writeDialogue.write(dialogueLine + "\n");
                 }
 
@@ -201,20 +165,18 @@ public class ScriptToDialogue {
 
 
                 if (line.contains(entry)) {
-                    System.out.println("entry");
                     String entryLine = scriptToDialogue.convertMissionEntry(line, entry);
                     writeDialogue.write("\n" + entryLine + "\n");
                 }
 
                 if (line.contains(closeMission)) {
-                    System.out.println("closeMission");
                     String entryLine = scriptToDialogue.convertMissionEntry(line, closeMission);
                     writeDialogue.write("\n" + entryLine + "\n");
                 }
 
                 if (line.contains("Info_AddChoice")) {
                     String entryChoice = scriptToDialogue.convertChoices(line);
-                    writeDialogue.write("\n" + entryChoice);
+                    writeDialogue.write(entryChoice + "\n");
                 }
 
                 for (int i = 1; i < 11; i++) {

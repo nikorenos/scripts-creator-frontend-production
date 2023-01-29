@@ -23,6 +23,11 @@ public class ReplaceDialoguesWithDataFromExcel {
 
                 while (line != null) {
                     if ((dialogues.size() > counter)) {
+                        if (line.toLowerCase().contains("description")) {
+                            line = line.substring(0, line.indexOf("\"") + 1) + dialogues.get(counter).get(1) + "\";";
+                            counter++;
+                        }
+
                         if (line.toLowerCase().contains("AI_Output".toLowerCase())) {
                             if (line.contains(dialogues.get(counter).get(0))) {
                                 String oldDialogue = line.substring(line.indexOf("\"); //") + 6);
@@ -33,10 +38,14 @@ public class ReplaceDialoguesWithDataFromExcel {
 
                             counter++;
                         }
+
+                        if (line.toLowerCase().contains("Info_AddChoice".toLowerCase()) && line.contains("\"")) {
+                            line = line.substring(0, line.indexOf("\"") + 1) + dialogues.get(counter).get(1) + line.substring(line.indexOf("\","));
+                            counter++;
+                        }
+
                         if (line.toLowerCase().contains("mission")) {
-                            if (dialogues.size() >= counter) {
-                                line = line.substring(0, line.indexOf("\"") + 1) + dialogues.get(counter).get(1) + "\");";
-                            }
+                            line = line.substring(0, line.indexOf("\"") + 1) + dialogues.get(counter).get(1) + "\");";
                             counter++;
                         }
                     }
@@ -65,7 +74,7 @@ public class ReplaceDialoguesWithDataFromExcel {
         ReplaceDialoguesWithDataFromExcel replaceDialoguesWithDataFromExcel = new ReplaceDialoguesWithDataFromExcel();
         ReadExcelFile readExcelFile = new ReadExcelFile();
         String excelFilePath = "E:\\dev\\scripts-creator-frontend-production\\temp.xlsx";
-        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_WoodForFeast.d";
+        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_SilentTreatment.d";
 
         List<List<String>> dialogues = readExcelFile.readExcelFile(excelFilePath);
         replaceDialoguesWithDataFromExcel.replaceDialoguesAndLogEntriesInScript(path, dialogues);

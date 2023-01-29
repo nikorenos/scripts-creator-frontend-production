@@ -22,12 +22,12 @@ public class ExtractDialoguesFromScript {
     public String convertMissionEntry(String line) {
         int startIndex = 0;
         int endIndex = 0;
-        String findStr1 = ", \"";
+        String findStr1 = "\"";
         String findStr2 = "\");";
 
         startIndex = line.indexOf(findStr1, startIndex);
         endIndex = line.indexOf(findStr2, endIndex);
-        return line.substring(startIndex + 3, endIndex);
+        return line.substring(startIndex + findStr1.length(), endIndex);
     }
 
     public String convertDescriptionEntry(String line) {
@@ -154,7 +154,7 @@ public class ExtractDialoguesFromScript {
         return dialogues;
     }
     public static void main(String[] args) throws IOException {
-        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_City_Aphrodisiac.d";
+        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_City_Alcoholic.d";
         ExtractDialoguesFromScript dialoguesFromScript = new ExtractDialoguesFromScript();
         List<List<String>> list = dialoguesFromScript.extractDialoguesFromScript(path);
         System.out.println(list);
