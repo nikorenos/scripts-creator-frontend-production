@@ -19,15 +19,14 @@ public class ExtractDialoguesFromScript {
         endIndex = line.indexOf(findStr2, endIndex);
         return line.substring(startIndex + findStr1.length(), endIndex);
     }
-    public String convertMissionEntry(String line) {
-        int startIndex = 0;
-        int endIndex = 0;
+    public List<String> convertMissionEntry(String line) {
+        List<String> convertMissionEntry = new ArrayList<>();
         String findStr1 = "\"";
         String findStr2 = "\");";
-
-        startIndex = line.indexOf(findStr1, startIndex);
-        endIndex = line.indexOf(findStr2, endIndex);
-        return line.substring(startIndex + findStr1.length(), endIndex);
+        String findTopicStr = "TOPIC_";
+        convertMissionEntry.add(line.substring(line.indexOf(findTopicStr) + findTopicStr.length(), line.indexOf(",")));
+        convertMissionEntry.add(line.substring(line.indexOf(findStr1) + findStr1.length(), line.indexOf(findStr2)));
+        return convertMissionEntry;
     }
 
     public String convertDescriptionEntry(String line) {
@@ -138,7 +137,7 @@ public class ExtractDialoguesFromScript {
                 }
 
                 if (line.toLowerCase().contains("mission")) {
-                    dialogues.add(Arrays.asList("", "Wpis do dziennika", convertMissionEntry(line)));
+                    dialogues.add(Arrays.asList(convertMissionEntry(line).get(0), "Wpis do dziennika", convertMissionEntry(line).get(1)));
                 }
 
 
