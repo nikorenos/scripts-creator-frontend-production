@@ -7,9 +7,9 @@ public class ScriptToDialogue {
 
     public String[] convertInstance(String line) {
         String dialogueName;
-        String findStrInstance = "DIA_";
+        String findStrInstance = "DIA_".toLowerCase();
         String findStrC_INFO = "C_INFO)";
-        dialogueName = line.substring(line.indexOf(findStrInstance) + findStrInstance.length(), line.toLowerCase().indexOf(findStrC_INFO.toLowerCase()));
+        dialogueName = line.substring(line.toLowerCase().indexOf(findStrInstance) + findStrInstance.length(), line.toLowerCase().indexOf(findStrC_INFO.toLowerCase()));
         if (dialogueName.contains(" ")) {
             dialogueName = dialogueName.substring(0, dialogueName.indexOf(" "));
         }
@@ -128,7 +128,7 @@ public class ScriptToDialogue {
 
     public static void main(String[] args) {
 
-        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_NowOrNever.d";
+        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_HunterFeast_Main.d";
         String startMission = "START_MISSION";
         String entry = "ENTRY_MISSION";
         String closeMission = "CLOSE_MISSION";

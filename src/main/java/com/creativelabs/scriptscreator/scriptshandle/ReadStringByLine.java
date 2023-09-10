@@ -1,5 +1,7 @@
 package com.creativelabs.scriptscreator.scriptshandle;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.util.Scanner;
 
 public class ReadStringByLine {
@@ -134,12 +136,15 @@ public class ReadStringByLine {
 
             if (line.startsWith("C")) {
                 choiceCounter+=1;
+                String secondChoiceDigit = String.valueOf(line.charAt(2));
+                if (!NumberUtils.isParsable(secondChoiceDigit)) secondChoiceDigit = "";
+                String currentChoiceNumber = line.charAt(1) + secondChoiceDigit;
                 System.out.println("choice: " + choiceCounter);
                 String choiceLine = line.substring(4);
                 if (choiceCounter <2) {
                     script.append("\n\tInfo_ClearChoices(Dia_" + npcName + "_" + dialogueName + ");" + "\n");
                 }
-                script.append("\tInfo_AddChoice(Dia_" + npcName + "_" + dialogueName + ",\"" + choiceLine + "\",Dia_" + npcName + "_" + dialogueName + "_" + choiceCounter + ");"+ "\n");
+                script.append("\tInfo_AddChoice(Dia_" + npcName + "_" + dialogueName + ",\"" + choiceLine + "\",Dia_" + npcName + "_" + dialogueName + "_" + currentChoiceNumber + ");"+ "\n");
             }
 
             if (line.startsWith("S")) {

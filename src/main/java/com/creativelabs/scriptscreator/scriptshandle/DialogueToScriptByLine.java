@@ -1,5 +1,7 @@
 package com.creativelabs.scriptscreator.scriptshandle;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.io.*;
 
 public class DialogueToScriptByLine {
@@ -194,12 +196,16 @@ public class DialogueToScriptByLine {
 
                     if (line.startsWith("C")) {
                         choiceCounter+=1;
-                        System.out.println("choice: " + choiceCounter);
+                        String secondChoiceDigit = String.valueOf(line.charAt(2));
+                        if (!NumberUtils.isParsable(secondChoiceDigit)) secondChoiceDigit = "";
+                        String currentChoiceNumber = line.charAt(1) + secondChoiceDigit;
+                        System.out.println("choice: " + currentChoiceNumber);
+                        System.out.println(line);
                         String choiceLine = line.substring(4);
                         if (choiceCounter <2) {
                             writeScript.write("\n\tInfo_ClearChoices(Dia_" + npcName + "_" + dialogueName + ");" + "\n");
                         }
-                        writeScript.write("\tInfo_AddChoice(Dia_" + npcName + "_" + dialogueName + ",\"" + choiceLine + "\",Dia_" + npcName + "_" + dialogueName + "_" + choiceCounter + ");"+ "\n");
+                        writeScript.write("\tInfo_AddChoice(Dia_" + npcName + "_" + dialogueName + ",\"" + choiceLine + "\",Dia_" + npcName + "_" + dialogueName + "_" + currentChoiceNumber + ");"+ "\n");
                     }
 
                     if (line.startsWith("S")) {
@@ -232,7 +238,7 @@ public class DialogueToScriptByLine {
         DialogueToScriptByLine dialogue = new DialogueToScriptByLine();
         String dialoguePath = "E:/dialogue.d";
         String gothicPath = "E:/Gothic II";
-        String questCodeName = "Test";
+        String questCodeName = "HatiretWrath";
         dialogue.writeScript(dialoguePath, gothicPath, questCodeName);
         FileOperations.openFile("E:/DIA_MainQuest_" + questCodeName + ".d");
     }
