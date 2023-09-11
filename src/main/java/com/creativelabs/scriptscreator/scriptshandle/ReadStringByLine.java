@@ -6,6 +6,12 @@ import java.util.Scanner;
 
 public class ReadStringByLine {
 
+    private static String calculateChoiceNumber(String line) {
+        String secondChoiceDigit = String.valueOf(line.charAt(2));
+        if (!NumberUtils.isParsable(secondChoiceDigit)) secondChoiceDigit = "";
+        return line.charAt(1) + secondChoiceDigit;
+    }
+
     public String convertDialogueIntoScript(String dialogue, String questCodeName) {
         DialogueToScriptByLine dialogueToScriptByLine = new DialogueToScriptByLine();
         StringBuilder script = new StringBuilder();
@@ -16,7 +22,6 @@ public class ReadStringByLine {
         int instanceCounter = 0;
         int dialogueCounter = 0;
         int choiceCounter = 0;
-        int sectionCounter = 0;
         String npcName = "";
         String dialogueName = "";
         String previousNpcName = "";
@@ -30,7 +35,6 @@ public class ReadStringByLine {
                 instanceCounter+=1;
                 dialogueCounter = 0;
                 choiceCounter = 0;
-                sectionCounter = 0;
                 String[] dialogueParts = dialogueToScriptByLine.convertDialogueStart(line);
                 npcName = dialogueParts[0];
                 dialogueName = dialogueParts[1];
@@ -136,9 +140,7 @@ public class ReadStringByLine {
 
             if (line.startsWith("C")) {
                 choiceCounter+=1;
-                String secondChoiceDigit = String.valueOf(line.charAt(2));
-                if (!NumberUtils.isParsable(secondChoiceDigit)) secondChoiceDigit = "";
-                String currentChoiceNumber = line.charAt(1) + secondChoiceDigit;
+                String currentChoiceNumber = calculateChoiceNumber(line);
                 System.out.println("choice: " + choiceCounter);
                 String choiceLine = line.substring(4);
                 if (choiceCounter <2) {
@@ -148,18 +150,18 @@ public class ReadStringByLine {
             }
 
             if (line.startsWith("S")) {
-                sectionCounter+=1;
+                String currentChoiceNumber = calculateChoiceNumber(line);
                 script.append("\n");
                 script.append("};");
                 script.append("\n");
-                script.append("FUNC VOID DIA_" + npcName + "_" + dialogueName + "_" + sectionCounter + " ()" + "\n");
+                script.append("FUNC VOID DIA_" + npcName + "_" + dialogueName + "_" + currentChoiceNumber + " ()" + "\n");
                 script.append("{");
                 script.append("\tInfo_ClearChoices(Dia_" + npcName + "_" + dialogueName + ");" + "\n");
             }
 
         }
         script.append("};");
-        return script.toString();
+        return script.toString().replace("…", "...");
     }
 
     public static void main(String[] args) {

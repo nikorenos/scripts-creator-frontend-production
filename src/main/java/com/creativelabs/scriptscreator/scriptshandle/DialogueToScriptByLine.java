@@ -60,12 +60,17 @@ public class DialogueToScriptByLine {
         return itemParts;
     }
 
+    private static String calculateChoiceNumber(String line) {
+        String secondChoiceDigit = String.valueOf(line.charAt(2));
+        if (!NumberUtils.isParsable(secondChoiceDigit)) secondChoiceDigit = "";
+        return line.charAt(1) + secondChoiceDigit;
+    }
+
     public void writeScript(String dialoguePath, String gothicFolderPathPath, String questCodeName) {
         File file = new File(dialoguePath);
         int instanceCounter = 0;
         int dialogueCounter = 0;
         int choiceCounter = 0;
-        int sectionCounter = 0;
         String npcName = "";
         String dialogueName = "";
         String previousNpcName = "";
@@ -90,7 +95,6 @@ public class DialogueToScriptByLine {
                         instanceCounter+=1;
                         dialogueCounter = 0;
                         choiceCounter = 0;
-                        sectionCounter = 0;
                         String[] dialogueParts = convertDialogueStart(line);
                         npcName = dialogueParts[0];
                         dialogueName = dialogueParts[1];
@@ -196,9 +200,7 @@ public class DialogueToScriptByLine {
 
                     if (line.startsWith("C")) {
                         choiceCounter+=1;
-                        String secondChoiceDigit = String.valueOf(line.charAt(2));
-                        if (!NumberUtils.isParsable(secondChoiceDigit)) secondChoiceDigit = "";
-                        String currentChoiceNumber = line.charAt(1) + secondChoiceDigit;
+                        String currentChoiceNumber = calculateChoiceNumber(line);
                         System.out.println("choice: " + currentChoiceNumber);
                         System.out.println(line);
                         String choiceLine = line.substring(4);
@@ -209,11 +211,11 @@ public class DialogueToScriptByLine {
                     }
 
                     if (line.startsWith("S")) {
-                        sectionCounter+=1;
+                        String currentChoiceNumber = calculateChoiceNumber(line);
                         writeScript.write("\n");
                         writeScript.write("};");
                         writeScript.write("\n");
-                        writeScript.write("FUNC VOID DIA_" + npcName + "_" + dialogueName + "_" + sectionCounter + " ()" + "\n");
+                        writeScript.write("FUNC VOID DIA_" + npcName + "_" + dialogueName + "_" + currentChoiceNumber + " ()" + "\n");
                         writeScript.write("{");
                         writeScript.write("\tInfo_ClearChoices(Dia_" + npcName + "_" + dialogueName + ");" + "\n");
                     }
