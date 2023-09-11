@@ -1,7 +1,8 @@
 package com.creativelabs.scriptscreator;
 
-import com.creativelabs.scriptscreator.ui.*;
-import com.creativelabs.scriptscreator.ui.StatsView;
+import com.creativelabs.scriptscreator.ui.ContactView;
+import com.creativelabs.scriptscreator.ui.DialogueToScriptFromStringView;
+import com.creativelabs.scriptscreator.ui.GuideView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -49,6 +50,7 @@ public class MainView extends AppLayout {
                 //new RouterLink("Script to dialogue", ScriptToDialogueView.class),
                 //new RouterLink("Exit dialogues for NPC", ExitDialogueView.class),
                 //new RouterLink("Stats", StatsView.class),
+                new RouterLink("How to write dialogues", GuideView.class),
                 new RouterLink("Contact", ContactView.class)
         ));
     }
