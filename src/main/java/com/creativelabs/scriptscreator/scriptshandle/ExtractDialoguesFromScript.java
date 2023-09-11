@@ -8,6 +8,11 @@ import java.util.List;
 
 public class ExtractDialoguesFromScript {
     int inconsistenciesCounter = 0;
+    List<List<String>> dialogues = new ArrayList<>();
+
+    public List<List<String>> getDialogues() {
+        return dialogues;
+    }
 
     public String convertChoiceEntry(String line) {
         int startIndex = 0;
@@ -69,7 +74,7 @@ public class ExtractDialoguesFromScript {
                 startDialogueIndex += findStrDialogueStart.length();
                 findStrDialogueNameStartIndex += findStrDialogueNameStart.length() + 1;
                 findStrDialogueNameEndIndex += findStrDialogueNameEnd.length();
-                speaker = line.substring(startAI_OutputIndex + 1, startAI_OutputIndex + 6);
+                speaker = line.substring(line.indexOf("(") + 1, line.indexOf(","));
                 dialogueName = line.substring(findStrDialogueNameStartIndex - 1, findStrDialogueNameEndIndex - 2);
                 npcDialogueName = dialogueName.substring(4, dialogueName.substring(4).indexOf("_") + 4);
                 if (!npcName.equals(npcDialogueName)) {
@@ -78,8 +83,7 @@ public class ExtractDialoguesFromScript {
                     System.out.println("Niezgodnosc nazwy npc z dialogue instance z nazwa npc w AI_Output:");
                     System.out.println(dialogueName);
                 }
-
-                if (speaker.equals("other")) {
+                if (speaker.contains("other")) {
                     speaker = "Morris".toUpperCase();
                 } else {
                     speaker = npcName.toUpperCase();
@@ -111,7 +115,7 @@ public class ExtractDialoguesFromScript {
                     dialogues.add(Arrays.asList("", "Description", convertDescriptionEntry(line)));
                 }
 
-                if (line.toLowerCase().contains("INSTANCE".toLowerCase())) {
+                if (line.toLowerCase().contains("INSTANCE ".toLowerCase())) {
                     npcName = scriptToDialogue.convertInstance(line)[0];
                     currentDialogueInstance = scriptToDialogue.convertInstance(line)[0] + "_" + scriptToDialogue.convertInstance(line)[1];
                     dialogues.add(Arrays.asList("", "", ""));
@@ -137,7 +141,8 @@ public class ExtractDialoguesFromScript {
                 }
 
                 if (line.toLowerCase().contains("mission")) {
-                    dialogues.add(Arrays.asList(convertMissionEntry(line).get(0), "Wpis do dziennika", convertMissionEntry(line).get(1)));
+                    List<String> missionEntries = convertMissionEntry(line);
+                    dialogues.add(Arrays.asList(missionEntries.get(0), "Wpis do dziennika", missionEntries.get(1)));
                 }
 
 
@@ -152,8 +157,47 @@ public class ExtractDialoguesFromScript {
         System.out.println();
         return dialogues;
     }
+
+
+    public List<List<String>> extractDialoguesFromScriptForSpecificNpc(String path, String searchedNpcName) throws IOException {
+        String npcName = "";
+        ScriptToDialogue scriptToDialogue = new ScriptToDialogue();
+        File file = new File(path);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line = reader.readLine();
+        boolean dialogueWithSearchedNpc = false;
+
+        try {
+
+            while (line != null) {
+
+                if (line.toLowerCase().contains("INSTANCE ".toLowerCase())) {
+                    System.out.println(line);
+                    dialogueWithSearchedNpc = line.toLowerCase().contains("dia_" + searchedNpcName.toLowerCase());
+                    npcName = scriptToDialogue.convertInstance(line)[0];
+                    if (dialogueWithSearchedNpc) dialogues.add(Arrays.asList("", "", ""));
+                }
+
+                if (line.toLowerCase().contains("AI_Output".toLowerCase()) && dialogueWithSearchedNpc) {
+                    dialogues.add(convertAIOutput(line, npcName));
+                }
+
+                if (line.toLowerCase().contains("Info_AddChoice".toLowerCase()) && line.contains("\"") && dialogueWithSearchedNpc) {
+                    dialogues.add(Arrays.asList("", "Choice", convertChoiceEntry(line)));
+                }
+
+
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
+        return dialogues;
+    }
     public static void main(String[] args) throws IOException {
-        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_City_Alcoholic.d";
+        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_Romance_SylviaTrip.d";
         ExtractDialoguesFromScript dialoguesFromScript = new ExtractDialoguesFromScript();
         List<List<String>> list = dialoguesFromScript.extractDialoguesFromScript(path);
         System.out.println(list);
