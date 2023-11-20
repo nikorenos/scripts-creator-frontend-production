@@ -4,23 +4,14 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ExitDialogue {
 
     public String readNpcFile(String line) {
-        String npcName = "";
-        int npcNameIndex = 0;
-        String findStrInstance = "instance ";
-        while (npcNameIndex != -1) {
-            npcNameIndex = line.indexOf(findStrInstance, npcNameIndex);
-            if (npcNameIndex != -1) {
-                npcNameIndex += findStrInstance.length();
-                npcName = line.substring(npcNameIndex, line.length()-14);
-            }
-        }
-        return npcName;
+        return line.substring(line.indexOf(" ") + 1, line.indexOf(" ("));
     }
 
     public List<String> filterNpcFiles(String folderPath) throws IOException {
@@ -33,10 +24,11 @@ public class ExitDialogue {
                 .collect(Collectors.toList());
     }
 
-    public String prepareExitFile(List<String> filteredFilesPaths) {
+    public List<String> filterNpcNames(List<String> filteredFilesPaths) {
         File file;
         String npcName;
-        String exitDialogueText = "";
+        List<String> npcNames = new ArrayList<>();
+        int counter = 0;
 
         BufferedReader reader;
         for (String fileName : filteredFilesPaths) {
@@ -44,45 +36,63 @@ public class ExitDialogue {
                 file = new File(fileName);
                 reader = new BufferedReader(new FileReader(file));
                 String line = reader.readLine();
+
                 while (line != null) {
-                    line = reader.readLine();
-                    if ((line != null) && (line.startsWith("instance") ||  line.startsWith("INSTANCE"))) {
+                    if (line.toLowerCase().contains("instance")) {
                         npcName = readNpcFile(line);
-                        exitDialogueText = exitDialogueText +
-                                "// ************************************************************\n" +
-                                "INSTANCE DIA_" + npcName + "_EXIT(C_INFO)\n" +
-                                "{\n" +
-                                "\tnpc\t\t\t= " + npcName + ";\n" +
-                                "\tnr\t\t\t= 999;\n" +
-                                "\tcondition\t= DIA_" + npcName + "_EXIT_Condition;\n" +
-                                "\tinformation\t= DIA_" + npcName + "_EXIT_Info;\n" +
-                                "\tpermanent\t= TRUE;\n" +
-                                "\tdescription = DIALOG_ENDE;\n" +
-                                "};                       \n" +
-                                "FUNC INT DIA_" + npcName + "_EXIT_Condition()\n" +
-                                "{\n" +
-                                "\treturn TRUE;\n" +
-                                "};\n" +
-                                "FUNC VOID DIA_" + npcName + "_EXIT_Info()\n" +
-                                "{\t\n" +
-                                "\tAI_StopProcessInfos\t(self);\n" +
-                                "};\n\n";
+                        System.out.println(npcName);
+                        npcNames.add(npcName);
+                        counter++;
                     }
+                    line = reader.readLine();
                 }
                 reader.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        System.out.println();
+        System.out.println("Amount of npc: " + counter);
+        System.out.println();
+        return npcNames;
+    }
+
+    public String prepareExitFile(List<String> npcNames) {
+        String exitDialogueText = "";
+
+        for (String npcName : npcNames) {
+            exitDialogueText = exitDialogueText +
+                    "// ************************************************************\n" +
+                    "INSTANCE DIA_" + npcName + "_EXIT(C_INFO)\n" +
+                    "{\n" +
+                    "\tnpc\t\t\t= " + npcName + ";\n" +
+                    "\tnr\t\t\t= 999;\n" +
+                    "\tcondition\t= DIA_" + npcName + "_EXIT_Condition;\n" +
+                    "\tinformation\t= DIA_" + npcName + "_EXIT_Info;\n" +
+                    "\tpermanent\t= TRUE;\n" +
+                    "\tdescription = DIALOG_ENDE;\n" +
+                    "};                       \n" +
+                    "FUNC INT DIA_" + npcName + "_EXIT_Condition()\n" +
+                    "{\n" +
+                    "\treturn TRUE;\n" +
+                    "};\n" +
+                    "FUNC VOID DIA_" + npcName + "_EXIT_Info()\n" +
+                    "{\t\n" +
+                    "\tAI_StopProcessInfos\t(self);\n" +
+                    "};\n\n";
+
+        }
         return exitDialogueText;
     }
+
     public void saveExitDialogues(String gothicFolder) throws IOException {
         ExitDialogue exitDialogue = new ExitDialogue();
         String npcFolderPath = gothicFolder + "/_Work/data/Scripts/Content/Story/NPC";
         String exitScriptPath = "/_Work/data/Scripts/Content/Story/Dialoge/DIA_Exit.d";
 
         List<String> filteredNpcFiles = exitDialogue.filterNpcFiles(npcFolderPath);
-        String exitDialogueText = exitDialogue.prepareExitFile(filteredNpcFiles);
+        List<String> npcNames = exitDialogue.filterNpcNames(filteredNpcFiles);
+        String exitDialogueText = exitDialogue.prepareExitFile(npcNames);
         try {
             FileWriter writeDialogue = new FileWriter(gothicFolder + exitScriptPath);
             writeDialogue.write(exitDialogueText);
