@@ -15,14 +15,7 @@ public class ExtractDialoguesFromScript {
     }
 
     public String convertChoiceEntry(String line) {
-        int startIndex = 0;
-        int endIndex = 0;
-        String findStr1 = "\"";
-        String findStr2 = "\",";
-
-        startIndex = line.indexOf(findStr1, startIndex);
-        endIndex = line.indexOf(findStr2, endIndex);
-        return line.substring(startIndex + findStr1.length(), endIndex);
+        return line.substring(line.indexOf("\"") + 1, line.indexOf("\","));
     }
     public List<String> convertMissionEntry(String line) {
         List<String> convertMissionEntry = new ArrayList<>();
@@ -172,7 +165,6 @@ public class ExtractDialoguesFromScript {
             while (line != null) {
 
                 if (line.toLowerCase().contains("INSTANCE ".toLowerCase())) {
-                    System.out.println(line);
                     dialogueWithSearchedNpc = line.toLowerCase().contains("dia_" + searchedNpcName.toLowerCase());
                     npcName = scriptToDialogue.convertInstance(line)[0];
                     if (dialogueWithSearchedNpc) dialogues.add(Arrays.asList("", "", ""));
@@ -193,7 +185,6 @@ public class ExtractDialoguesFromScript {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println();
         return dialogues;
     }
     public static void main(String[] args) throws IOException {

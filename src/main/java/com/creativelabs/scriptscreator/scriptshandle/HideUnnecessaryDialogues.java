@@ -1,18 +1,21 @@
 package com.creativelabs.scriptscreator.scriptshandle;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 
 public class HideUnnecessaryDialogues {
 
-    private void commentDialoguesInScript(String gothicFolderPath, String questCodeName) {
+    private void commentDialoguesInScript(String filePath) {
         int dialogueCounter = 0;
-        String fileFolderPath = gothicFolderPath + "/_Work/data/Scripts/Content/Story/Dialoge/DIA_MainQuest_" + questCodeName + ".d";
         StringBuilder script = new StringBuilder();
 
 
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader(fileFolderPath));
+            reader = new BufferedReader(new FileReader(filePath));
             String line = reader.readLine();
 
             try {
@@ -37,7 +40,7 @@ public class HideUnnecessaryDialogues {
                 }
                 System.out.println(script);
                 reader.close();
-                FileWriter writeScript = new FileWriter(fileFolderPath);
+                FileWriter writeScript = new FileWriter(filePath);
                 writeScript.write(script.toString());
                 writeScript.close();
                 System.out.println("Dialogue successfully wrote to the file.");
@@ -51,22 +54,21 @@ public class HideUnnecessaryDialogues {
         }
     }
 
-    private void unCommentDialoguesInScript(String gothicFolderPath, String questCodeName) {
+    private void unCommentDialoguesInScript(String filePath) {
         int dialogueCounter = 0;
-        String fileFolderPath = gothicFolderPath + "/_Work/data/Scripts/Content/Story/Dialoge/DIA_MainQuest_" + questCodeName + ".d";
         StringBuilder script = new StringBuilder();
 
 
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader(fileFolderPath));
+            reader = new BufferedReader(new FileReader(filePath));
             String line = reader.readLine();
 
             try {
 
                 while (line != null) {
-                    if (line.startsWith("//\tAI_Output")) {
-                        script = new StringBuilder(script + line.substring(2) + "\n");
+                    if (line.contains("//") && line.contains("AI_Output")) {
+                        script = new StringBuilder(script + line.replace("//", "").replace("\"); ", "\"); //") + "\n");
                     } else {
                         script.append(line).append("\n");
                     }
@@ -74,7 +76,7 @@ public class HideUnnecessaryDialogues {
                 }
                 System.out.println(script);
                 reader.close();
-                FileWriter writeScript = new FileWriter(fileFolderPath);
+                FileWriter writeScript = new FileWriter(filePath);
                 writeScript.write(script.toString());
                 writeScript.close();
                 System.out.println("Dialogue successfully wrote to the file.");
@@ -88,12 +90,21 @@ public class HideUnnecessaryDialogues {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         HideUnnecessaryDialogues dialogue = new HideUnnecessaryDialogues();
+        ReadAndModifyNpc readAndModifyNpc = new ReadAndModifyNpc();
         String gothicPath = "E:/Gothic II";
-        String questCodeName = "Friends";
-        dialogue.commentDialoguesInScript(gothicPath, questCodeName);
+        String questCodeName = "DIA_MainQuest_Antidotum_Pirates .d";
+        //dialogue.commentDialoguesInScript(gothicPath, questCodeName);
         //dialogue.unCommentDialoguesInScript(gothicPath, questCodeName);
+
+        List<String> files = readAndModifyNpc.filesNamesList("E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge");
+        System.out.println(files);
+        System.out.println(files.size());
+        for (String filePath: files) {
+            dialogue.commentDialoguesInScript(filePath);
+            //dialogue.unCommentDialoguesInScript(filePath);
+        }
     }
 }
 

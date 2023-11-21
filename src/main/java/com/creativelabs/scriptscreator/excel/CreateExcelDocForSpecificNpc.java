@@ -24,6 +24,7 @@ public class CreateExcelDocForSpecificNpc {
         List<String> npcNames = exitDialogue.filterNpcNames(filteredNpcFiles);
 
         for (String npcName : npcNames) {
+            //System.out.println(npcName);
             extractDialoguesForSpecfificNpc(extractDialoguesFromScript, npcName);
         }
 

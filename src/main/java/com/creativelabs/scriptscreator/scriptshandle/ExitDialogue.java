@@ -40,7 +40,6 @@ public class ExitDialogue {
                 while (line != null) {
                     if (line.toLowerCase().contains("instance")) {
                         npcName = readNpcFile(line);
-                        System.out.println(npcName);
                         npcNames.add(npcName);
                         counter++;
                     }
@@ -54,7 +53,7 @@ public class ExitDialogue {
         System.out.println();
         System.out.println("Amount of npc: " + counter);
         System.out.println();
-        return npcNames;
+        return npcNames.stream().sorted().collect(Collectors.toList());
     }
 
     public String prepareExitFile(List<String> npcNames) {
