@@ -1,15 +1,24 @@
 package com.creativelabs.scriptscreator.scriptshandle;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 
 public class ExtractDialoguesFromScript {
     int inconsistenciesCounter = 0;
     List<List<String>> dialogues = new ArrayList<>();
+    int dialogueLineCounter = 0;
+    int heroDialogueLineCounter = 0;
 
+    public int getHeroDialogueLineCounter() {
+        return heroDialogueLineCounter;
+    }
+    public int getDialogueLineCounter() {
+        return dialogueLineCounter;
+    }
     public List<List<String>> getDialogues() {
         return dialogues;
     }
@@ -152,7 +161,7 @@ public class ExtractDialoguesFromScript {
     }
 
 
-    public List<List<String>> extractDialoguesFromScriptForSpecificNpc(String path, String searchedNpcName) throws IOException {
+    public List<List<String>> extractDialoguesFromScriptForSpecificNpcWithAllNpc(String path, String searchedNpcName) throws IOException {
         String npcName = "";
         ScriptToDialogue scriptToDialogue = new ScriptToDialogue();
         File file = new File(path);
@@ -171,6 +180,47 @@ public class ExtractDialoguesFromScript {
                 }
 
                 if (line.toLowerCase().contains("AI_Output".toLowerCase()) && dialogueWithSearchedNpc) {
+                    dialogueLineCounter++;
+                    if (line.toLowerCase().contains("other, self,".toLowerCase())) heroDialogueLineCounter++;
+                    dialogues.add(convertAIOutput(line, npcName));
+                }
+
+                if (line.toLowerCase().contains("Info_AddChoice".toLowerCase()) && line.contains("\"") && dialogueWithSearchedNpc) {
+                    dialogues.add(Arrays.asList("", "Choice", convertChoiceEntry(line)));
+                }
+
+
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return dialogues;
+    }
+
+    public List<List<String>> extractDialoguesFromScriptForSpecificNpc(String path, String searchedNpcName) throws IOException {
+        List<List<String>> dialogues = new ArrayList<>();
+        String npcName = "";
+        ScriptToDialogue scriptToDialogue = new ScriptToDialogue();
+        File file = new File(path);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line = reader.readLine();
+        boolean dialogueWithSearchedNpc = false;
+
+        try {
+
+            while (line != null) {
+
+                if (line.toLowerCase().contains("INSTANCE ".toLowerCase())) {
+                    dialogueWithSearchedNpc = line.toLowerCase().contains("dia_" + searchedNpcName.toLowerCase());
+                    npcName = scriptToDialogue.convertInstance(line)[0];
+                    if (dialogueWithSearchedNpc) dialogues.add(Arrays.asList("", "", ""));
+                }
+
+                if (line.toLowerCase().contains("AI_Output".toLowerCase()) && dialogueWithSearchedNpc) {
+                    dialogueLineCounter++;
+                    if (line.toLowerCase().contains("other, self,".toLowerCase())) heroDialogueLineCounter++;
                     dialogues.add(convertAIOutput(line, npcName));
                 }
 

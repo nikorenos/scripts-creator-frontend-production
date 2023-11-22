@@ -5,14 +5,16 @@ import com.creativelabs.scriptscreator.scriptshandle.ExtractDialoguesFromScript;
 import com.creativelabs.scriptscreator.scriptshandle.FileOperations;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CreateExcelDocForSpecificNpc {
 
 
     public static void main(String[] args) throws IOException {
         String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_Romance_OlsaRevenge.d";
+        int counter = 0;
         //String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_City.d";
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         ExtractDialoguesFromScript extractDialoguesFromScript = new ExtractDialoguesFromScript();
@@ -22,24 +24,34 @@ public class CreateExcelDocForSpecificNpc {
         String npcFolderPath = "E:/Gothic II/_Work/data/Scripts/Content/Story/NPC";
         List<String> filteredNpcFiles = exitDialogue.filterNpcFiles(npcFolderPath);
         List<String> npcNames = exitDialogue.filterNpcNames(filteredNpcFiles);
+        Map<String, List<List<String>>> npcWithDialogues = new HashMap<>(Collections.emptyMap());
 
         for (String npcName : npcNames) {
             //System.out.println(npcName);
-            extractDialoguesForSpecfificNpc(extractDialoguesFromScript, npcName);
+            List<List<String>> dialogues = extractDialoguesFromAllScriptsForSpecificNpc(extractDialoguesFromScript, npcName);
+            if (dialogues.size() > 1) {
+                counter++;
+                npcWithDialogues.put(npcName, dialogues);
+            }
         }
 
-        createExcelDoc.createExcelDoc(extractDialoguesFromScript.getDialogues());
+        createExcelDoc.createExcelDocWithTabForEachNpc(npcWithDialogues);
         FileOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
+        System.out.println("Ilosc postaci z dialogami: " + counter + ", wszystkich linii dialogowych: " + extractDialoguesFromScript.getDialogueLineCounter());
+        System.out.println("Ilosc linii dialogowych glowengo bohatera: " + extractDialoguesFromScript.getHeroDialogueLineCounter());
     }
 
-    private static void extractDialoguesForSpecfificNpc(ExtractDialoguesFromScript extractDialoguesFromScript, String npcName) throws IOException {
+    private static List<List<String>> extractDialoguesFromAllScriptsForSpecificNpc(ExtractDialoguesFromScript extractDialoguesFromScript, String npcName) throws IOException {
+        List<List<String>> listArrayList = new ArrayList<>();
         FileOperations fileOperations = new FileOperations();
         Set<String> dialogueFilesPath = fileOperations.getAbsolutePathForFiles("E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\", "DIA");
         for (String dialoguePath : dialogueFilesPath) {
             //System.out.println(dialoguePath);
-            extractDialoguesFromScript.extractDialoguesFromScriptForSpecificNpc(dialoguePath, npcName);
+            listArrayList = Stream.concat(listArrayList.stream(), extractDialoguesFromScript.extractDialoguesFromScriptForSpecificNpc(dialoguePath, npcName).stream())
+                    .collect(Collectors.toList());
 
         }
+        return listArrayList;
     }
 
 }
