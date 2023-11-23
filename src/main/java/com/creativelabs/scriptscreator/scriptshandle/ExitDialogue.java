@@ -4,8 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ExitDialogue {
@@ -54,6 +53,46 @@ public class ExitDialogue {
         System.out.println("Amount of npc: " + counter);
         System.out.println();
         return npcNames.stream().sorted().collect(Collectors.toList());
+    }
+
+    public Set<String> filterNpcNamesFromDialogues(Set<String> filteredFilesPaths) {
+        File file;
+        String npcName;
+        Set<String> npcNames =  new HashSet<>();
+
+        BufferedReader reader;
+        for (String fileName : filteredFilesPaths) {
+            try {
+                file = new File(fileName);
+                reader = new BufferedReader(new FileReader(file));
+                String line = reader.readLine();
+
+                while (line != null) {
+                    if (line.toLowerCase().contains("npc") && line.toLowerCase().contains("=") && line.toLowerCase().contains(";")
+                            && !line.contains("_") && !line.contains("(") && !line.contains(")") && !line.contains(".")) {
+                        npcName = line.substring(firstCapitalLetter(line), line.indexOf(";"));
+                        npcNames.add(npcName);
+                    }
+                    line = reader.readLine();
+                }
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println();
+        System.out.println("Amount of npc: " + npcNames.size());
+        System.out.println();
+        return npcNames;
+    }
+
+    public int firstCapitalLetter(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            if (Character.isUpperCase(str.charAt(i))) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public String prepareExitFile(List<String> npcNames) {

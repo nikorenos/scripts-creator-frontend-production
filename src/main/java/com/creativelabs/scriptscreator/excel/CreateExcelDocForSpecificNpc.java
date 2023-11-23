@@ -21,9 +21,8 @@ public class CreateExcelDocForSpecificNpc {
 
 
         ExitDialogue exitDialogue = new ExitDialogue();
-        String npcFolderPath = "E:/Gothic II/_Work/data/Scripts/Content/Story/NPC";
-        List<String> filteredNpcFiles = exitDialogue.filterNpcFiles(npcFolderPath);
-        List<String> npcNames = exitDialogue.filterNpcNames(filteredNpcFiles);
+        FileOperations fileOperations = new FileOperations();
+        Set<String> npcNames = exitDialogue.filterNpcNamesFromDialogues(getDialogueFilesPathes(fileOperations));
         Map<String, List<List<String>>> npcWithDialogues = new HashMap<>(Collections.emptyMap());
 
         for (String npcName : npcNames) {
@@ -44,7 +43,7 @@ public class CreateExcelDocForSpecificNpc {
     private static List<List<String>> extractDialoguesFromAllScriptsForSpecificNpc(ExtractDialoguesFromScript extractDialoguesFromScript, String npcName) throws IOException {
         List<List<String>> listArrayList = new ArrayList<>();
         FileOperations fileOperations = new FileOperations();
-        Set<String> dialogueFilesPath = fileOperations.getAbsolutePathForFiles("E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\", "DIA");
+        Set<String> dialogueFilesPath = getDialogueFilesPathes(fileOperations);
         for (String dialoguePath : dialogueFilesPath) {
             //System.out.println(dialoguePath);
             listArrayList = Stream.concat(listArrayList.stream(), extractDialoguesFromScript.extractDialoguesFromScriptForSpecificNpc(dialoguePath, npcName).stream())
@@ -52,6 +51,10 @@ public class CreateExcelDocForSpecificNpc {
 
         }
         return listArrayList;
+    }
+
+    private static Set<String> getDialogueFilesPathes(FileOperations fileOperations) {
+        return fileOperations.getAbsolutePathForFiles("E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\", "DIA");
     }
 
 }
