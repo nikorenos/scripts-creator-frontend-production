@@ -26,6 +26,26 @@ public class CreateNpcAmbient {
                 .mapToInt(Integer::intValue).max().getAsInt();
     }
 
+    public int findFirstMissingNpcId(String folderPath) throws IOException {
+        List<Integer> ids = Files.list(Paths.get(folderPath))
+                .filter(Files::isRegularFile)
+                .map(Path::toFile)
+                .map(File::getName)
+                .filter(name -> !name.equals("PC_Hero.d"))
+                .map(name -> name.replaceAll("[^\\d.]", ""))
+                .map(name -> name.replaceAll("[.]", ""))
+                .map(Integer::parseInt)
+                .sorted()
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < ids.size(); i++) {
+            if (ids.get(i) != i + 1) {
+                return i + 1;
+            }
+        }
+        return ids.size() + 1;
+    }
+
     public List<String> listNpc(String folderPath) throws IOException {
         return Files.list(Paths.get(folderPath))
                 .filter(Files::isRegularFile)
@@ -57,22 +77,22 @@ public class CreateNpcAmbient {
     }
 
     public void createNPC(int amount, int npcId) {
-
+        //int npcId = findFirstMissingNpcId(path);
 
         for (int n = 1; n <= amount; n++) {
 
-            String name = "NAME_Buerger";
-            String npcGuild = "VLK";
-            String npcName = "CITY_" + npcId + "_City_Ambient";
-            String waypoint = "CITY";
-            int SetAttributesToChapter = 3;
+            String name = "Name_Novize";
+            String npcGuild = "ZOMBIE";
+            String npcName = "NOV_" + npcId + "_Ambient";
+            String waypoint = "LEVEL_03_NOVICE_000";
+            int SetAttributesToChapter = 5;
             int voice = 1 + n;
-            String fight_tactic = "COWARD"; // MASTER / STRONG / COWARD
-            String weapon = "ItMw_1h_Vlk_Axe"; //ItMw_2h_Sld_Axe iron_mastersword ItMw_1h_Vlk_Axe itmw_1h_bau_axe
-            String armor = "ITAR_VLK_M3"; //ITAR_BDT_H ITAR_BDT_M ItAr_Leather_L itar_prisoner
-            String Mdl_ApplyOverlayMds = "Relaxed"; // Tired / Militia / Mage / Arrogance / Relaxed
-            int FightSkills = 20;
-            String routine = "TA_Smalltalk"; //TA_Smalltalk TA_Practice_Sword TA_Sit_Bench TA_Stand_Eating
+            String fight_tactic = "STRONG"; // MASTER / STRONG / COWARD
+            String weapon = "ItMW_Hasis_Stab01"; //ItMw_2h_Sld_Axe iron_mastersword ItMw_1h_Vlk_Axe itmw_1h_bau_axe
+            String armor = "Hasis_Nov_01"; //ITAR_BDT_H ITAR_BDT_M ItAr_Leather_L itar_prisoner
+            String Mdl_ApplyOverlayMds = "Mage"; // Tired / Militia / Mage / Arrogance / Relaxed
+            int FightSkills = 60;
+            String routine = "TA_Stand_WP"; //TA_Smalltalk TA_Practice_Sword TA_Sit_Bench TA_Stand_Eating
 
             String npcScript = "\n" +
                     "instance " + npcName + " (Npc_Default)\n" +
@@ -82,7 +102,7 @@ public class CreateNpcAmbient {
                     "\tguild \t\t= GIL_" + npcGuild + ";\n" +
                     "\tid \t\t\t= " + npcId + ";\n" +
                     "\tvoice \t\t= " + voice + ";\n" +
-                    "\tflags      \t= NPC_FLAG_IMMORTAL;\n" +
+                    "\tflags      \t= 0;\n" + //NPC_FLAG_IMMORTAL
                     "\tnpctype\t\t= NPCTYPE_MAIN;\n" +
                     "\t\n" +
                     "\t// ------ Aivars ------\n" +
@@ -126,8 +146,7 @@ public class CreateNpcAmbient {
 
             try {
                 //create npc
-                String npcPath = "E:/Gothic 2/_Work/data/Scripts/Content/" +
-                        "Story/NPC/" + npcName + ".d";
+                String npcPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\NPC\\" + npcName + ".d";
                 FileWriter myWriter = new FileWriter(npcPath);
                 myWriter.write(npcScript);
                 myWriter.close();
@@ -165,10 +184,13 @@ public class CreateNpcAmbient {
         CreateNpcAmbient createNpcAmbient = new CreateNpcAmbient();
         String gothicFolder = "E:/Gothic II";
         String npcFolderPath = gothicFolder + "/_Work/data/Scripts/Content/Story/NPC";
+        int firstFree = createNpcAmbient.findFirstMissingNpcId(npcFolderPath);
         int maxNpcId = createNpcAmbient.findMaxNpcId(npcFolderPath);
+        System.out.println("Pierwszy wolny numer dla npc: " + (firstFree + 1));
         System.out.println("Pierwszy wolny numer dla npc: " + (maxNpcId + 1));
 
-        //createNpcAmbient.createNPC(4,maxNpcId+1);
+        //createNpcAmbient.createNPC(9, npcFolderPath);
+        //createNpcAmbient.createNPC(7,maxNpcId+1);
 
     }
 }

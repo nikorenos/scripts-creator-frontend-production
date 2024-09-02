@@ -13,12 +13,12 @@ public class CreateExcelDocForSpecificNpc {
 
 
     public static void main(String[] args) throws IOException {
-        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_Romance_OlsaRevenge.d";
+        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_Xardas.d";
         int counter = 0;
         //String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_City.d";
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         ExtractDialoguesFromScript extractDialoguesFromScript = new ExtractDialoguesFromScript();
-
+        String specificNpcName = "Satir";
 
         ExitDialogue exitDialogue = new ExitDialogue();
         FileOperations fileOperations = new FileOperations();
@@ -26,11 +26,13 @@ public class CreateExcelDocForSpecificNpc {
         Map<String, List<List<String>>> npcWithDialogues = new HashMap<>(Collections.emptyMap());
 
         for (String npcName : npcNames) {
-            //System.out.println(npcName);
-            List<List<String>> dialogues = extractDialoguesFromAllScriptsForSpecificNpc(extractDialoguesFromScript, npcName);
-            if (dialogues.size() > 1) {
-                counter++;
-                npcWithDialogues.put(npcName, dialogues);
+            if (Objects.equals(npcName, specificNpcName)) {
+                //System.out.println(npcName);
+                List<List<String>> dialogues = extractDialoguesFromAllScriptsForSpecificNpc(extractDialoguesFromScript, npcName);
+                if (dialogues.size() > 1) {
+                    counter++;
+                    npcWithDialogues.put(npcName, dialogues);
+                }
             }
         }
 
@@ -54,7 +56,7 @@ public class CreateExcelDocForSpecificNpc {
     }
 
     private static Set<String> getDialogueFilesPathes(FileOperations fileOperations) {
-        return fileOperations.getAbsolutePathForFiles("E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\", "DIA");
+        return fileOperations.getAbsolutePathForFiles("E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\Story\\Dialoge\\", "DIA");
     }
 
 }

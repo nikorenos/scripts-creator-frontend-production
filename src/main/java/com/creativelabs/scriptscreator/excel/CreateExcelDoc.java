@@ -209,7 +209,7 @@ public class CreateExcelDoc {
     }
 
     public static void main(String[] args) throws IOException {
-        String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_Romance_OlsaRevenge.d";
+        String scriptPath = "E:\\Gothic II Old\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_City_OldBook.d";
         //String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_City.d";
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         ExtractDialoguesFromScript extractDialoguesFromScript = new ExtractDialoguesFromScript();

@@ -31,7 +31,7 @@ public class CheckDuplicatesInDialogues {
 
         CheckDuplicatesInDialogues check = new CheckDuplicatesInDialogues();
 
-        String dialoguePath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_BloodyCrystalTower_Pirates.d";
+        String dialoguePath = "E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_Temple.d";
         File file = new File(dialoguePath);
         Map<String, String> dialoguesMap = new HashMap<>();
         int duplicates = 0;

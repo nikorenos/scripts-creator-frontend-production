@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReplaceDialoguesWithDataFromExcel {
@@ -69,12 +70,22 @@ public class ReplaceDialoguesWithDataFromExcel {
 
     }
 
+    public static List<String> getFirstElements(List<List<String>> dialogues) {
+        List<String> firstElements = new ArrayList<>();
+        for (List<String> innerList : dialogues) {
+            if (!innerList.isEmpty() && (!innerList.get(1).equals("MORRIS"))) {
+                firstElements.add(innerList.get(0));
+            }
+        }
+        return firstElements;
+    }
+
 
     public static void main(String[] args) throws IOException {
         ReplaceDialoguesWithDataFromExcel replaceDialoguesWithDataFromExcel = new ReplaceDialoguesWithDataFromExcel();
         ReadExcelFile readExcelFile = new ReadExcelFile();
         String excelFilePath = "E:\\dev\\scripts-creator-frontend-production\\temp.xlsx";
-        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_SilentTreatment.d";
+        String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_BloodyCrystalTower_City.d";
 
         List<List<String>> dialogues = readExcelFile.readExcelFile(excelFilePath);
         replaceDialoguesWithDataFromExcel.replaceDialoguesAndLogEntriesInScript(path, dialogues);
