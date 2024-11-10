@@ -27,7 +27,7 @@ public class ListDifferenceInFilesNamesInFolders {
         List<String> audioFilesNames = listFilesNamesInFolder("E:\\Dubbbing ZW2\\Dla Anonimowego\\Horn - Kristo\\Gotowe nagrania");
         String excelFilePath = "E:\\dev\\scripts-creator-frontend-production\\temp.xlsx";
         ReadExcelFile readExcelFile = new ReadExcelFile();
-        List<List<String>> dialogues = readExcelFile.readExcelFile(excelFilePath);
+        List<List<String>> dialogues = readExcelFile.readExcelFile(excelFilePath, null);
         List<String> dialogueNames = getFirstElements(dialogues);
         for (String dialogueName: dialogueNames) {
             if (!audioFilesNames.contains(dialogueName)) System.out.println(dialogueName);

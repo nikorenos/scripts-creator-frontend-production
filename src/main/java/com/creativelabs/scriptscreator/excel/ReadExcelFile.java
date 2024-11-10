@@ -14,11 +14,13 @@ import java.util.List;
 
 public class ReadExcelFile {
 
-    public List<List<String>> readExcelFile(String path) throws IOException {
+    public List<List<String>> readExcelFile(String path, String sheetName) throws IOException {
         FileInputStream file = new FileInputStream(path);
         Workbook workbook = new XSSFWorkbook(file);
 
-        Sheet sheet = workbook.getSheetAt(0);
+        Sheet sheet = null;
+        if (sheetName != null) sheet = workbook.getSheet(sheetName);
+        else workbook.getSheetAt(0);
 
         List<List<String>> dialogues = new ArrayList<>();
         for (Row row : sheet) {

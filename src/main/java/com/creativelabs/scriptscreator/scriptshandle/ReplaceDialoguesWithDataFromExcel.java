@@ -87,7 +87,7 @@ public class ReplaceDialoguesWithDataFromExcel {
         String excelFilePath = "E:\\dev\\scripts-creator-frontend-production\\temp.xlsx";
         String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_MainQuest_BloodyCrystalTower_City.d";
 
-        List<List<String>> dialogues = readExcelFile.readExcelFile(excelFilePath);
+        List<List<String>> dialogues = readExcelFile.readExcelFile(excelFilePath, null);
         replaceDialoguesWithDataFromExcel.replaceDialoguesAndLogEntriesInScript(path, dialogues);
     }
 }
