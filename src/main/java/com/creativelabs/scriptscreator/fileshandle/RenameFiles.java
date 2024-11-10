@@ -1,14 +1,21 @@
 package com.creativelabs.scriptscreator.fileshandle;
 
+import com.creativelabs.scriptscreator.excel.ReadExcelFile;
+
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RenameFiles {
-    public static void main(String[] args) {
-        String folderPath = "C:\\Users\\akcja\\Desktop\\Nowy folder\\Temp\\Nowy folder\\Nowe twarze";
-        String baseName = "Hum_Head_V";
-        int startingNumber = 230;
+    public static void main(String[] args) throws IOException {
+//        String folderWithFilesPath = "C:\\Users\\akcja\\Desktop\\Nowy folder\\Temp\\Nowy folder\\Nowe twarze";
+//        String baseName = "Hum_Head_V";
+//        int startingNumber = 230;
+//        renameFilesInFolder(folderWithFilesPath, baseName, startingNumber);
+        RenameFiles renameFiles = new RenameFiles();
+        renameWavFilesInFolder("E:\\Dubbbing ZW2\\Morris\\Nagrania do zmiany", renameFiles.collectDialogueNames("Horn", true));
 
-        renameFilesInFolder(folderPath, baseName, startingNumber);
     }
 
     public static void renameFilesInFolder(String folderPath, String baseName, int startingNumber) {
@@ -37,6 +44,50 @@ public class RenameFiles {
                     System.out.println("Failed to rename " + file.getName());
                 }
                 count++;
+            }
+        }
+    }
+
+    public List<String> collectDialogueNames(String npcName, Boolean forHero) throws IOException {
+        ReadExcelFile readExcelFile = new ReadExcelFile();
+        String excelFilePath = "E:\\Dubbbing ZW2\\Morris\\GoldenGate2_Dialogues_- najnowsze 29.09.2024.xlsx";
+        String actualNpcName = npcName;
+        if (forHero) actualNpcName = "Morris";
+
+        String finalActualNpcName = actualNpcName;
+        return readExcelFile.readExcelFile(excelFilePath, npcName).stream()
+                .filter(sublist -> sublist.size() > 1 && finalActualNpcName.toUpperCase().equals(sublist.get(1)))
+                .map(sublist -> sublist.get(0))
+                .collect(Collectors.toList());
+    }
+
+    public static void renameWavFilesInFolder(String folderPath, List<String> newNames) {
+        File folder = new File(folderPath);
+
+        if (!folder.exists() || !folder.isDirectory()) {
+            System.out.println("The specified folder path does not exist or is not a directory.");
+            return;
+        }
+
+        File[] files = folder.listFiles();
+        if (files == null || files.length == 0) {
+            System.out.println("No files found in the specified folder.");
+            return;
+        }
+
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (file.isFile()) {
+                String extension = getFileExtension(file);
+                String newFileName = "lack of extension";
+                if (extension.equals("wav")) newFileName = newNames.get(i) + "." + extension;
+                else System.out.println("lack of extension: " + file.getName());
+                File newFile = new File(folder, newFileName);
+                if (file.renameTo(newFile)) {
+                    System.out.println("Renamed " + file.getName() + " to " + newFile.getName());
+                } else {
+                    System.out.println("Failed to rename " + file.getName());
+                }
             }
         }
     }
