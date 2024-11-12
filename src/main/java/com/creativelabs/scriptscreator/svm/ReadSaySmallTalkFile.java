@@ -12,7 +12,11 @@ public class ReadSaySmallTalkFile {
 
     public static void main(String[] args) throws IOException {
 
-        HashMap<Integer, List<String>> extractedIdsWithSmallTalks = readBSaySmalltalk("E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\AI\\Human\\B_Human\\B_Say_Smalltalk.d");
+        String bSaySmallTalkPath = "E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\AI\\Human\\B_Human\\B_Say_Smalltalk.d";
+        String svmPath = "E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\Story\\SVM.d";
+        HashMap<Integer, List<String>> extractedIdsWithSmallTalks = readBSaySmalltalk(bSaySmallTalkPath);
+        Map<String, List<String>> extractedSVMTexts = readSVM(svmPath);
+        Map<String, List<List<String>>> listWithNpcAndSmallTalks = convertToNpcWithSVM(extractedSVMTexts, extractedIdsWithSmallTalks);
         System.out.println(extractedIdsWithSmallTalks);
         System.out.println(extractedIdsWithSmallTalks.size());
 //        ReadAndModifyNpc readNpc = new ReadAndModifyNpc();
@@ -108,24 +112,83 @@ public class ReadSaySmallTalkFile {
                             List<String> updatedSmallTalks = entry.getValue();
                             updatedSmallTalks.add(extractGGSmalltalk(line));
                             entry.setValue(updatedSmallTalks);
-                            //entry.getValue().addAll(extractGGSmalltalk(line));
                         }
                     }
 
-                line = reader.readLine();
+                    line = reader.readLine();
+                }
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (
+                IOException e) {
+            throw new RuntimeException(e);
         }
-    } catch(
-    IOException e)
-
-    {
-        throw new RuntimeException(e);
-    }
         return mainList;
-}
+    }
+
+    public static Map<String, List<String>> readSVM(String filePath) {
+        HashMap<String, List<String>> svmList = new HashMap<>();
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(filePath));
+            String line = reader.readLine();
+
+            try {
+                while (line != null) {
+                    if (line.contains("GG_Smalltalk")) {
+                        Pattern pattern = Pattern.compile("(GG_Smalltalk\\d+)\\s*=\\s*\"(SVM_7_Smalltalk\\d+)\"\\s*;//(.*)");
+
+                        Matcher matcher = pattern.matcher(line);
+                        while (matcher.find()) {
+                            String key = matcher.group(1);                  // GG_Smalltalk01, GG_Smalltalk02, etc.
+                            String value = matcher.group(2);                // SVM_7_Smalltalk01, SVM_7_Smalltalk02, etc.
+                            String comment = matcher.group(3).trim();       // Text after //
+
+                            // Add the value and comment to a list
+                            List<String> valueList = Arrays.asList(value, comment);
+                            svmList.put(key, valueList);
+                        }
+                    }
+
+                    line = reader.readLine();
+                }
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (
+                IOException e) {
+            throw new RuntimeException(e);
+        }
+        return svmList;
+    }
+
+    public static Map<String, List<String>> extractData(String text) {
+        Map<String, List<String>> resultMap = new HashMap<>();
+        // Pattern to match GG_Smalltalk01 or GG_Smalltalk02 as the key, the value in quotes, and the comment after //
+        Pattern pattern = Pattern.compile("(GG_Smalltalk\\d+)\\s*=\\s*\"(SVM_7_Smalltalk\\d+)\"\\s*;//(.*)");
+
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            String key = matcher.group(1);                  // GG_Smalltalk01, GG_Smalltalk02, etc.
+            String value = matcher.group(2);                // SVM_7_Smalltalk01, SVM_7_Smalltalk02, etc.
+            String comment = matcher.group(3).trim();       // Text after //
+
+            // Add the value and comment to a list
+            List<String> valueList = Arrays.asList(value, comment);
+            resultMap.put(key, valueList);
+        }
+        return resultMap;
+    }
+
+    public static Map<String, List<List<String>>> convertToNpcWithSVM(Map<String, List<String>> extractedSVMTexts, HashMap<Integer, List<String>> extractedIdsWithSmallTalks) {
+        Map<String, List<List<String>>> npcWithSVM = new HashMap<>(Collections.emptyMap());
+
+
+        return npcWithSVM;
+    }
 
     private static void addTempListToMain(HashMap<Integer, List<String>> mainList, HashMap<Integer, List<String>> tempList) {
         for (Map.Entry<Integer, List<String>> entry : tempList.entrySet()) {
