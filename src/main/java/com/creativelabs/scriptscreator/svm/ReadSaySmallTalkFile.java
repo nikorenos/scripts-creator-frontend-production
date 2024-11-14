@@ -44,7 +44,7 @@ public class ReadSaySmallTalkFile {
                 Matcher matcher = pattern.matcher(file);
                 if (matcher.find()) {
                     int id = Integer.parseInt(matcher.group());
-                    if (id == entry.getKey() && containsSmalltalkRoutine(file)) {
+                    if (id == entry.getKey() && !file.toLowerCase().contains("ambient") && containsSmalltalkRoutine(file)) {
                         filteredNpcNameWithSVM.put(readAndModifyNpc.extractNpcFileName(file), convertToNpcWithSVM(entry.getValue(), extractedSVMTexts));
                     }
                 }
