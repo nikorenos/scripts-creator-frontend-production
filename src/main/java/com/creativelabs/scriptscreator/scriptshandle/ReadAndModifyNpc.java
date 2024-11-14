@@ -24,6 +24,15 @@ public class ReadAndModifyNpc {
         reverseString = new StringBuilder(reverseString).reverse().toString();
         return reverseString;
     }
+    public String extractNpcFileName(String filePath) {
+            int lastSeparatorIndex = filePath.lastIndexOf("\\");
+            int extensionIndex = filePath.lastIndexOf(".d");
+
+            if (lastSeparatorIndex != -1 && extensionIndex != -1) {
+                return filePath.substring(lastSeparatorIndex + 1, extensionIndex);
+            }
+            return null;
+        }
 
     public void modifyNpc(List<String> filesNamesList, String destinationFolder, int npcId) {
         ReadAndModifyNpc readAllFiles = new ReadAndModifyNpc();

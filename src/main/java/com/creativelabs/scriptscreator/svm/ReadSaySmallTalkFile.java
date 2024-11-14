@@ -1,5 +1,9 @@
 package com.creativelabs.scriptscreator.svm;
 
+import com.creativelabs.scriptscreator.excel.CreateExcelDoc;
+import com.creativelabs.scriptscreator.scriptshandle.FileOperations;
+import com.creativelabs.scriptscreator.scriptshandle.ReadAndModifyNpc;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,37 +18,54 @@ public class ReadSaySmallTalkFile {
 
         String bSaySmallTalkPath = "E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\AI\\Human\\B_Human\\B_Say_Smalltalk.d";
         String svmPath = "E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\Story\\SVM.d";
-        HashMap<Integer, List<String>> extractedIdsWithSmallTalks = readBSaySmalltalk(bSaySmallTalkPath);
-        Map<String, List<String>> extractedSVMTexts = readSVM(svmPath);
-        Map<String, List<List<String>>> listWithNpcAndSmallTalks = convertToNpcWithSVM(extractedSVMTexts, extractedIdsWithSmallTalks);
-        System.out.println(extractedIdsWithSmallTalks);
-        System.out.println(extractedIdsWithSmallTalks.size());
-//        ReadAndModifyNpc readNpc = new ReadAndModifyNpc();
-//        List<String> npcList = readNpc.filesNamesList("E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\Story\\NPC");
-//
-//
-//        System.out.println("Extracted IDs: " + extractedIds);
-//        List<String> filteredFiles = filterFilesById(npcList, extractedIds);
-//
-//        System.out.println("Filtered Files size: " + filteredFiles.size() + ", " + filteredFiles);
+
+        HashMap<Integer, List<String>> extractedIdsWithSmallTalks = readBSaySmalltalk(bSaySmallTalkPath); //read npc ids with small talks
+        Map<String, List<String>> extractedSVMTexts = readSVM(svmPath); //read all small talks
+        ReadAndModifyNpc readNpc = new ReadAndModifyNpc();
+        List<String> npcList = readNpc.filesNamesList("E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\Story\\NPC"); //read all npc
+        HashMap<String, List<List<String>>> filteredNpcWithSVM = filterNpcById(npcList, extractedIdsWithSmallTalks, extractedSVMTexts); //filter npc with small talks
+
+        CreateExcelDoc createExcelDoc = new CreateExcelDoc();
+        createExcelDoc.createExcelDocWithTabForEachNpc(filteredNpcWithSVM);
+        FileOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
+
+        System.out.println("Filtered npc: " + filteredNpcWithSVM.keySet().size());
 
 
     }
 
-    public static List<String> filterFilesById(List<String> files, Set<Integer> extractedIds) throws FileNotFoundException {
-        List<String> filteredFiles = new ArrayList<>();
+    public static HashMap<String, List<List<String>>> filterNpcById(List<String> files, HashMap<Integer, List<String>> filteredNpcWithSVM, Map<String, List<String>> extractedSVMTexts) throws FileNotFoundException {
+        HashMap<String, List<List<String>>> filteredNpcNameWithSVM = new HashMap<>();
         Pattern pattern = Pattern.compile("\\d+"); // Matches sequences of digits
+        ReadAndModifyNpc readAndModifyNpc = new ReadAndModifyNpc();
 
-        for (String file : files) {
-            Matcher matcher = pattern.matcher(file);
-            if (matcher.find()) {
-                int id = Integer.parseInt(matcher.group());
-                if (extractedIds.contains(id) && containsSmalltalkRoutine(file)) {
-                    filteredFiles.add(file);
+            for (String file : files) {
+                for (Map.Entry<Integer, List<String>> entry : filteredNpcWithSVM.entrySet()) {
+                Matcher matcher = pattern.matcher(file);
+                if (matcher.find()) {
+                    int id = Integer.parseInt(matcher.group());
+                    if (id == entry.getKey() && containsSmalltalkRoutine(file)) {
+                        filteredNpcNameWithSVM.put(readAndModifyNpc.extractNpcFileName(file), convertToNpcWithSVM(entry.getValue(), extractedSVMTexts));
+                    }
                 }
             }
         }
-        return filteredFiles;
+
+
+        return filteredNpcNameWithSVM;
+    }
+
+    public static List<List<String>> convertToNpcWithSVM(List<String> svmNames, Map<String, List<String>> extractedSVMTexts) {
+        List<List<String>> svms = new ArrayList<>();
+
+        for (String svmName : svmNames) {
+            for (Map.Entry<String, List<String>> entry : extractedSVMTexts.entrySet()) {
+                if (svmName.equals(entry.getKey()))
+                    svms.add(entry.getValue());
+            }
+        }
+
+        return svms;
     }
 
     public static Set<Integer> extractIds(String text) {
@@ -147,7 +168,7 @@ public class ReadSaySmallTalkFile {
                             String comment = matcher.group(3).trim();       // Text after //
 
                             // Add the value and comment to a list
-                            List<String> valueList = Arrays.asList(value, comment);
+                            List<String> valueList = Arrays.asList(value, "", comment);
                             svmList.put(key, valueList);
                         }
                     }
@@ -181,13 +202,6 @@ public class ReadSaySmallTalkFile {
             resultMap.put(key, valueList);
         }
         return resultMap;
-    }
-
-    public static Map<String, List<List<String>>> convertToNpcWithSVM(Map<String, List<String>> extractedSVMTexts, HashMap<Integer, List<String>> extractedIdsWithSmallTalks) {
-        Map<String, List<List<String>>> npcWithSVM = new HashMap<>(Collections.emptyMap());
-
-
-        return npcWithSVM;
     }
 
     private static void addTempListToMain(HashMap<Integer, List<String>> mainList, HashMap<Integer, List<String>> tempList) {
