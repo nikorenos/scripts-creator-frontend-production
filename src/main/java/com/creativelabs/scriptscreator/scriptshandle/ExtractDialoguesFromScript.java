@@ -212,7 +212,7 @@ public class ExtractDialoguesFromScript {
 
             while (line != null) {
 
-                if (line.toLowerCase().contains("INSTANCE ".toLowerCase())) {
+                if (line.toLowerCase().contains("INSTANCE ".toLowerCase()) && !line.toLowerCase().contains("exit")) {
                     dialogueWithSearchedNpc = line.toLowerCase().contains("dia_" + searchedNpcName.toLowerCase());
                     npcName = scriptToDialogue.convertInstance(line)[0];
                     if (dialogueWithSearchedNpc) dialogues.add(Arrays.asList("", "", ""));
