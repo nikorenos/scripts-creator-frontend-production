@@ -14,6 +14,7 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
+	google()
 }
 
 configurations {
@@ -40,6 +41,15 @@ dependencies {
 	//excel
 	implementation 'org.apache.poi:poi-ooxml:5.2.3'
 	implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
+
+	//deepl
+	implementation "com.deepl.api:deepl-java:1.7.0"
+
+	//google could translations
+	implementation("com.google.cloud:google-cloud-translate:2.10.0")
+
+	//csv
+	implementation("com.opencsv:opencsv:5.9")
 }
 
 dependencyManagement {
