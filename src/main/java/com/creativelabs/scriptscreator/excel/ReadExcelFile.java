@@ -23,6 +23,8 @@ public class ReadExcelFile {
         else workbook.getSheetAt(0);
 
         List<List<String>> dialogues = new ArrayList<>();
+        System.out.println("Nazwa ścieżki: " + path);
+        System.out.println("Nazwa postaci: " + sheetName);
         for (Row row : sheet) {
 
             if (!row.getCell(1).getStringCellValue().isEmpty() && !row.getCell(0).getStringCellValue().equals("Nazwa kwestii")) {

@@ -1,7 +1,7 @@
 package com.creativelabs.scriptscreator.svm;
 
 import com.creativelabs.scriptscreator.excel.CreateExcelDoc;
-import com.creativelabs.scriptscreator.scriptshandle.FileOperations;
+import com.creativelabs.scriptscreator.scriptshandle.FileAndFolderOperations;
 import com.creativelabs.scriptscreator.scriptshandle.ReadAndModifyNpc;
 
 import java.io.BufferedReader;
@@ -27,7 +27,7 @@ public class ReadSaySmallTalkFile {
 
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         createExcelDoc.createExcelDocWithTabForEachNpc(filteredNpcWithSVM);
-        FileOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
+        FileAndFolderOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
 
         System.out.println("Filtered npc: " + filteredNpcWithSVM.keySet().size());
 
@@ -39,12 +39,21 @@ public class ReadSaySmallTalkFile {
         Pattern pattern = Pattern.compile("\\d+"); // Matches sequences of digits
         ReadAndModifyNpc readAndModifyNpc = new ReadAndModifyNpc();
 
-            for (String file : files) {
-                for (Map.Entry<Integer, List<String>> entry : filteredNpcWithSVM.entrySet()) {
+        for (String file : files) {
+            for (Map.Entry<Integer, List<String>> entry : filteredNpcWithSVM.entrySet()) {
                 Matcher matcher = pattern.matcher(file);
                 if (matcher.find()) {
                     int id = Integer.parseInt(matcher.group());
-                    if (id == entry.getKey() && !file.toLowerCase().contains("ambient") && containsSmalltalkRoutine(file)) {
+                    if (id == entry.getKey()
+                            && !file.toLowerCase().contains("ambient")
+//                            && checkName(file, Arrays.asList(
+//                            "Enzo", "Lisa", "Orazio", "Remo", "Roy",
+//                            "Sylvia", "Alissa", "Harren", "Olsa", "Gorn",
+//                            "Rodrigo", "Bolas", "Alrik", "Satir", "Lester",
+//                            "Ivo", "Guddar", "Fisser", "Hank", "Royce",
+//                            "Ugo", "Caleb", "Otmar", "Arnie", "Miles", "Slick"))
+                            && containsSmalltalkRoutine(file))
+                    {
                         filteredNpcNameWithSVM.put(readAndModifyNpc.extractNpcFileName(file), convertToNpcWithSVM(entry.getValue(), extractedSVMTexts));
                     }
                 }
@@ -53,6 +62,13 @@ public class ReadSaySmallTalkFile {
 
 
         return filteredNpcNameWithSVM;
+    }
+
+    public static boolean checkName(String fileName, List<String> listNames) {
+        for (String name : listNames) {
+            if (fileName.contains(name)) return true;
+        }
+        return false;
     }
 
     public static List<List<String>> convertToNpcWithSVM(List<String> svmNames, Map<String, List<String>> extractedSVMTexts) {

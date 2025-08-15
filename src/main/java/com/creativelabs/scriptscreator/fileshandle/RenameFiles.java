@@ -7,14 +7,21 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.creativelabs.scriptscreator.fileshandle.CopyFilesFromSubfolders.moveFilesToDestinationFolder;
+import static com.creativelabs.scriptscreator.scriptshandle.FileAndFolderOperations.getFoldersNames;
+
 public class RenameFiles {
     public static void main(String[] args) throws IOException {
 //        String folderWithFilesPath = "C:\\Users\\akcja\\Desktop\\Nowy folder\\Temp\\Nowy folder\\Nowe twarze";
 //        String baseName = "Hum_Head_V";
 //        int startingNumber = 230;
 //        renameFilesInFolder(folderWithFilesPath, baseName, startingNumber);
+
         RenameFiles renameFiles = new RenameFiles();
-        renameWavFilesInFolder("E:\\Dubbbing ZW2\\Morris\\Nagrania do zmiany", renameFiles.collectDialogueNames("Horn", true));
+        for (String folderName : getFoldersNames(new File("E:\\Dubbbing ZW2\\ToRename").toPath())) {
+            renameWavFilesInFolder(folderName, renameFiles.collectDialogueNames(folderName.substring(folderName.lastIndexOf("\\") + 1), true));
+        }
+        moveFilesToDestinationFolder("E:\\Dubbbing ZW2\\ToRename", "E:\\Dubbbing ZW2\\Renamed");
 
     }
 
@@ -50,7 +57,7 @@ public class RenameFiles {
 
     public List<String> collectDialogueNames(String npcName, Boolean forHero) throws IOException {
         ReadExcelFile readExcelFile = new ReadExcelFile();
-        String excelFilePath = "E:\\Dubbbing ZW2\\Morris\\GoldenGate2_Dialogues_- najnowsze 29.09.2024.xlsx";
+        String excelFilePath = "E:\\Dubbbing ZW2\\GoldenGate2_Dialogues_Final.xlsx";
         String actualNpcName = npcName;
         if (forHero) actualNpcName = "Morris";
 

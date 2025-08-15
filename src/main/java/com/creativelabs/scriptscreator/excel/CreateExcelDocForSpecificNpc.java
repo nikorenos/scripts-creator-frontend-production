@@ -2,7 +2,7 @@ package com.creativelabs.scriptscreator.excel;
 
 import com.creativelabs.scriptscreator.scriptshandle.ExitDialogue;
 import com.creativelabs.scriptscreator.scriptshandle.ExtractDialoguesFromScript;
-import com.creativelabs.scriptscreator.scriptshandle.FileOperations;
+import com.creativelabs.scriptscreator.scriptshandle.FileAndFolderOperations;
 
 import java.io.IOException;
 import java.util.*;
@@ -18,11 +18,11 @@ public class CreateExcelDocForSpecificNpc {
         //String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_City.d";
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         ExtractDialoguesFromScript extractDialoguesFromScript = new ExtractDialoguesFromScript();
-        String specificNpcName = "Satir";
+        String specificNpcName = "BDT_Fortuno";
 
         ExitDialogue exitDialogue = new ExitDialogue();
-        FileOperations fileOperations = new FileOperations();
-        Set<String> npcNames = exitDialogue.filterNpcNamesFromDialogues(getDialogueFilesPathes(fileOperations));
+        FileAndFolderOperations fileAndFolderOperations = new FileAndFolderOperations();
+        Set<String> npcNames = exitDialogue.filterNpcNamesFromDialogues(getDialogueFilesPathes(fileAndFolderOperations));
         Map<String, List<List<String>>> npcWithDialogues = new HashMap<>(Collections.emptyMap());
 
         for (String npcName : npcNames) {
@@ -37,15 +37,15 @@ public class CreateExcelDocForSpecificNpc {
         }
 
         createExcelDoc.createExcelDocWithTabForEachNpc(npcWithDialogues);
-        FileOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
+        FileAndFolderOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
         System.out.println("Ilosc postaci z dialogami: " + counter + ", wszystkich linii dialogowych: " + extractDialoguesFromScript.getDialogueLineCounter());
         System.out.println("Ilosc linii dialogowych glowengo bohatera: " + extractDialoguesFromScript.getHeroDialogueLineCounter());
     }
 
     private static List<List<String>> extractDialoguesFromAllScriptsForSpecificNpc(ExtractDialoguesFromScript extractDialoguesFromScript, String npcName) throws IOException {
         List<List<String>> listArrayList = new ArrayList<>();
-        FileOperations fileOperations = new FileOperations();
-        Set<String> dialogueFilesPath = getDialogueFilesPathes(fileOperations);
+        FileAndFolderOperations fileAndFolderOperations = new FileAndFolderOperations();
+        Set<String> dialogueFilesPath = getDialogueFilesPathes(fileAndFolderOperations);
         for (String dialoguePath : dialogueFilesPath) {
             //System.out.println(dialoguePath);
             listArrayList = Stream.concat(listArrayList.stream(), extractDialoguesFromScript.extractDialoguesFromScriptForSpecificNpc(dialoguePath, npcName).stream())
@@ -55,8 +55,8 @@ public class CreateExcelDocForSpecificNpc {
         return listArrayList;
     }
 
-    private static Set<String> getDialogueFilesPathes(FileOperations fileOperations) {
-        return fileOperations.getAbsolutePathForFiles("E:\\Gothic II Old\\_work\\Data\\Scripts\\Content\\Story\\Dialoge\\", "DIA");
+    private static Set<String> getDialogueFilesPathes(FileAndFolderOperations fileAndFolderOperations) {
+        return fileAndFolderOperations.getAbsolutePathForFiles("E:\\Gothic II Goldengate 1\\Gothic II\\_work\\Data\\Scripts\\Content\\Story\\Dialoge\\", "DIA");
     }
 
 }

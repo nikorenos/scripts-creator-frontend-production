@@ -1,7 +1,7 @@
 package com.creativelabs.scriptscreator.svm;
 
 import com.creativelabs.scriptscreator.excel.CreateExcelDoc;
-import com.creativelabs.scriptscreator.scriptshandle.FileOperations;
+import com.creativelabs.scriptscreator.scriptshandle.FileAndFolderOperations;
 import com.creativelabs.scriptscreator.scriptshandle.ReadAndModifyNpc;
 
 import java.io.BufferedReader;
@@ -26,7 +26,7 @@ public class ReadSayGuildGreetingsFile {
 
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         createExcelDoc.createExcelDocWithTabForEachNpc(filteredNpcWithSVM);
-        FileOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
+        FileAndFolderOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
 
         System.out.println("Filtered npc: " + filteredNpcWithSVM.keySet().size());
 

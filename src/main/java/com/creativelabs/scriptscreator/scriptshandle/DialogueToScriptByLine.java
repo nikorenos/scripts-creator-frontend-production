@@ -242,7 +242,7 @@ public class DialogueToScriptByLine {
         String gothicPath = "E:/Gothic II";
         String questCodeName = "HatiretWrath";
         dialogue.writeScript(dialoguePath, gothicPath, questCodeName);
-        FileOperations.openFile("E:/DIA_MainQuest_" + questCodeName + ".d");
+        FileAndFolderOperations.openFile("E:/DIA_MainQuest_" + questCodeName + ".d");
     }
 }
 

@@ -2,12 +2,16 @@ package com.creativelabs.scriptscreator.scriptshandle;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FileOperations {
+public class FileAndFolderOperations {
 
     public static void openFile(String path) {
         try {
@@ -38,11 +42,19 @@ public class FileOperations {
                 .forEach(System.out::println);
     }
 
+    public static List<String> getFoldersNames(Path directory) throws IOException {
+        try (Stream<Path> paths = Files.list(directory)) {
+            return paths.filter(Files::isDirectory)
+                    .map(Path::toString)
+                    .collect(Collectors.toList());
+        }
+    }
+
     public static void main(String[] args) {
-        FileOperations fileOperations = new FileOperations();
+        FileAndFolderOperations fileAndFolderOperations = new FileAndFolderOperations();
         String path = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge";
-        fileOperations.printFilesNames(path, "Quest");
-        Set<String> list = fileOperations.getAbsolutePathForFiles(path, "Quest");
+        fileAndFolderOperations.printFilesNames(path, "Quest");
+        Set<String> list = fileAndFolderOperations.getAbsolutePathForFiles(path, "Quest");
         System.out.println(list);
     }
 }

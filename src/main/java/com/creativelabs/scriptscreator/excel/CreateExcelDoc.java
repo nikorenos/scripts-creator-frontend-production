@@ -1,7 +1,7 @@
 package com.creativelabs.scriptscreator.excel;
 
 import com.creativelabs.scriptscreator.scriptshandle.ExtractDialoguesFromScript;
-import com.creativelabs.scriptscreator.scriptshandle.FileOperations;
+import com.creativelabs.scriptscreator.scriptshandle.FileAndFolderOperations;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -209,15 +209,15 @@ public class CreateExcelDoc {
     }
 
     public static void main(String[] args) throws IOException {
-        String scriptPath = "E:\\Gothic II Old\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_SideQuest_City_OldBook.d";
+        String scriptPath = "E:\\Gothic II Goldengate 1\\Gothic II\\_work\\Data\\Scripts\\Content\\Story\\Dialoge\\DIA_KDW_Christian.d";
         //String scriptPath = "E:\\Gothic II\\_work\\data\\Scripts\\Content\\Story\\Dialoge\\DIA_City.d";
         CreateExcelDoc createExcelDoc = new CreateExcelDoc();
         ExtractDialoguesFromScript extractDialoguesFromScript = new ExtractDialoguesFromScript();
         List<List<String>> dialogues = extractDialoguesFromScript.extractDialoguesFromScript(scriptPath);
         Map<String,List<List<String>>> npcWithDialogues = new HashMap<>(Collections.emptyMap());
-        npcWithDialogues.put("Olsa", dialogues);
+        npcWithDialogues.put("BDT_Fortuno", dialogues);
         createExcelDoc.createExcelDocWithTabForEachNpc(npcWithDialogues);
-        FileOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
+        FileAndFolderOperations.openFile("E:\\dev\\scripts-creator-frontend-production\\temp.xlsx");
     }
 
 }
