@@ -93,7 +93,7 @@ public class RenameFiles {
                 if (file.renameTo(newFile)) {
                     System.out.println("Renamed " + file.getName() + " to " + newFile.getName());
                 } else {
-                    System.out.println("Failed to rename " + file.getName());
+                    System.out.println("Failed to rename file: " + file.getName() + " to: " + newFile.getName());
                 }
             }
         }

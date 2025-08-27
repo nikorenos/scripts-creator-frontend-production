@@ -27,12 +27,14 @@ public class ReadExcelFile {
         System.out.println("Nazwa postaci: " + sheetName);
         for (Row row : sheet) {
 
-            if (!row.getCell(1).getStringCellValue().isEmpty() && !row.getCell(0).getStringCellValue().equals("Nazwa kwestii")) {
-                List<String> dialogue = new ArrayList<>();
-                dialogue.add(row.getCell(0).getStringCellValue());
-                dialogue.add(row.getCell(1).getStringCellValue());
-                dialogue.add(row.getCell(2).getStringCellValue());
-                dialogues.add(dialogue);
+            if (row.getCell(1) != null) {
+                if (!row.getCell(1).getStringCellValue().isEmpty() && !row.getCell(0).getStringCellValue().equals("Nazwa kwestii")) {
+                    List<String> dialogue = new ArrayList<>();
+                    dialogue.add(row.getCell(0).getStringCellValue());
+                    dialogue.add(row.getCell(1).getStringCellValue());
+                    dialogue.add(row.getCell(2).getStringCellValue());
+                    dialogues.add(dialogue);
+                }
             }
         }
         return dialogues;
@@ -118,11 +120,11 @@ public class ReadExcelFile {
             for (int i = 0; i < files.length; i++) {
                 File file = files[i];
                 String newName = listOfNames.get(i);
-                File newFile = new File(folderPath + "\\" + newName+ ".wav");
+                File newFile = new File(folderPath + "\\" + newName + ".wav");
                 if (file.renameTo(newFile)) {
                     System.out.println("File " + file.getName() + " renamed to " + newName);
                 } else {
-                    System.out.println("Failed to rename file: " + file.getName());
+                    System.out.println("Failed to rename file: " + file.getName() + " to: " + newName);
                 }
             }
         } else {
