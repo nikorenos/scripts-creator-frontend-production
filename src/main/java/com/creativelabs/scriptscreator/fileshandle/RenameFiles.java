@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.creativelabs.scriptscreator.fileshandle.CopyFilesFromSubfolders.moveFilesToDestinationFolder;
+import static com.creativelabs.scriptscreator.fileshandle.CopyFilesFromSubfolders.copyFilesToDestinationFolder;
 import static com.creativelabs.scriptscreator.scriptshandle.FileAndFolderOperations.getFoldersNames;
 
 public class RenameFiles {
@@ -19,9 +19,9 @@ public class RenameFiles {
 
         RenameFiles renameFiles = new RenameFiles();
         for (String folderName : getFoldersNames(new File("E:\\Dubbbing ZW2\\ToRename").toPath())) {
-            renameWavFilesInFolder(folderName, renameFiles.collectDialogueNames(folderName.substring(folderName.lastIndexOf("\\") + 1), true));
+            renameWavFilesInFolder(folderName, renameFiles.collectDialogueNames(folderName.substring(folderName.lastIndexOf("\\") + 1), false));
         }
-        moveFilesToDestinationFolder("E:\\Dubbbing ZW2\\ToRename", "E:\\Dubbbing ZW2\\Renamed");
+        copyFilesToDestinationFolder("E:\\Dubbbing ZW2\\ToRename", "E:\\Dubbbing ZW2\\Renamed");
 
     }
 
@@ -57,7 +57,9 @@ public class RenameFiles {
 
     public List<String> collectDialogueNames(String npcName, Boolean forHero) throws IOException {
         ReadExcelFile readExcelFile = new ReadExcelFile();
-        String excelFilePath = "E:\\Dubbbing ZW2\\GoldenGate2_Dialogues_Final.xlsx";
+        String excelFilePath;
+        if (forHero) excelFilePath = "E:\\Dubbbing ZW2\\GoldenGate2_Dialogues_Final.xlsx";
+        else excelFilePath = "E:\\Dubbbing ZW2\\ToRename\\" + npcName + "\\" + npcName + ".xlsx";
         String actualNpcName = npcName;
         if (forHero) actualNpcName = "Morris";
 

@@ -20,6 +20,7 @@ public class ReadExcelFile {
 
         Sheet sheet = null;
         if (sheetName != null) sheet = workbook.getSheet(sheetName);
+        if (sheet == null) sheet = workbook.getSheet("Kopia arkusza " + sheetName);
         else workbook.getSheetAt(0);
 
         List<List<String>> dialogues = new ArrayList<>();

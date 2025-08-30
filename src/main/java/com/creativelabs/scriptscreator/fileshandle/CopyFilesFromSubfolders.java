@@ -5,7 +5,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
 public class CopyFilesFromSubfolders {
-    public static void moveFilesToDestinationFolder(String sourceFolder, String destinationFolder) {
+    public static void copyFilesToDestinationFolder(String sourceFolder, String destinationFolder) {
         Path sourceDir = Paths.get(sourceFolder);
         Path destinationDir = Paths.get(destinationFolder);
 
@@ -18,7 +18,7 @@ public class CopyFilesFromSubfolders {
             Files.walkFileTree(sourceDir, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (Files.isRegularFile(file)) {
+                    if (Files.isRegularFile(file) && file.toString().endsWith(".wav")) {
                         Path targetFile = destinationDir.resolve(file.getFileName());
                         Files.copy(file, targetFile, StandardCopyOption.COPY_ATTRIBUTES);
                         System.out.println("Skopiowano: " + file + " -> " + targetFile);
