@@ -3,23 +3,25 @@ package com.creativelabs.scriptscreator.buildmodpack;
 import java.io.IOException;
 
 import static com.creativelabs.scriptscreator.buildmodpack.CopyNewerFiles.copyNewerFiles;
+import static com.creativelabs.scriptscreator.buildmodpack.GitUpdater.updateRepo;
+import static com.creativelabs.scriptscreator.buildmodpack.GothicModBuilder.buildModPack;
 import static com.creativelabs.scriptscreator.fileshandle.CopySpecificFile.copyFileIfNewer;
 
 public class ModPackManager {
     public static void main(String[] args) throws IOException {
-//        updateRepo("E:\\RepoZW2\\.git");
-//        copyAnimsToModPack();
-//        copyMeshesToModPack();
-//        copyPresetsToModPack();
-//        copyScriptsToModPack();
-//        copyOUToModPack();
-//        copyTexturesToModPack();
-//        copyMainWorldToModPack();
-//        copyAutorun();
+        updateRepo("E:\\RepoZW2\\.git");
+        copyAnimsToModPack();
+        copyMeshesToModPack();
+        copyPresetsToModPack();
+        copyScriptsToModPack();
+        copyOUToModPack();
+        copyTexturesToModPack();
+        copyMainWorldToModPack();
+        copyAutorun();
         copyTempleZen();
-//        copyGerezaZen();
-//        copyzBassMusic();
-//        buildModPack();
+        copyGerezaZen();
+        copyzBassMusic();
+        buildModPack();
     }
 
     private static void copyAnimsToModPack() throws IOException {
