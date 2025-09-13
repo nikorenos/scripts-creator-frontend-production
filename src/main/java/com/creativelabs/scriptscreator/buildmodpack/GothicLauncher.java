@@ -51,4 +51,8 @@ public class GothicLauncher {
             e.printStackTrace();
         }
     }
+
+    public static void main(String[] args) {
+        launchGothic2();
+    }
 }
